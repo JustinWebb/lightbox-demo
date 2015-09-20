@@ -1,3 +1,11 @@
+/* 
+* @Author: justinwebb
+* @Date:   2015-09-20 14:52:39
+* @Last Modified by:   justinwebb
+* @Last Modified time: 2015-09-20 15:14:11
+*/
+
+
 // Avoid `console` errors in browsers that lack a console.
 (function() {
     'use strict';
@@ -21,5 +29,3 @@
         }
     }
 }());
-
-// Place any jQuery/helper plugins in here.
