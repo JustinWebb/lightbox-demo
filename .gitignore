@@ -1,0 +1,18 @@
+
+# Dependency directory
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+
+# User specifics
+.DS_Store
+.sublime-project
+.sublime-workspace
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed

@@ -1,0 +1,31 @@
+{
+  "name": "lightbox-demo",
+  "version": "1.0.0",
+  "description": "Skills demo for take-home interview exam",
+  "main": "index.html",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JustinWebb/lightbox-demo.git"
+  },
+  "keywords": [
+    "js",
+    "html",
+    "css"
+  ],
+  "author": "Justin Webb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JustinWebb/lightbox-demo/issues"
+  },
+  "homepage": "https://github.com/JustinWebb/lightbox-demo",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-livereload": "^3.8.0"
+  }
+}
