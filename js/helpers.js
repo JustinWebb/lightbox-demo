@@ -1,9 +1,27 @@
 /* 
 * @Author: justinwebb
+* @Date:   2015-09-20 15:24:21
+* @Last Modified by:   justinwebb
+* @Last Modified time: 2015-09-20 15:34:28
+*/
+
+(function (window) {
+  'use strict';
+  
+  var Ajax = function () {
+
+  };
+
+
+  window.Ajax = Ajax;
+
+})(window);;/* 
+* @Author: justinwebb
 * @Date:   2015-09-20 14:52:39
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-20 15:14:11
+* @Last Modified time: 2015-09-20 15:33:20
 */
+
 
 
 // Avoid `console` errors in browsers that lack a console.

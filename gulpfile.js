@@ -2,7 +2,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 14:14:33
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-20 15:18:36
+* @Last Modified time: 2015-09-20 15:33:50
 */
 
 'use strict';
@@ -12,7 +12,7 @@ var concat = require('gulp-concat');
 var paths = {
   jsSrc: [
     '!js/vendor', 
-    'js/plugin.js',
+    'js/helpers.js',
     'js/main.js'
   ],
   jsHelpers: ['js/helpers/**/*.js'],
