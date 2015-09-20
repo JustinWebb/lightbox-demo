@@ -3,13 +3,13 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    Justin Webb -- Creator (Designer/Developer) -- @JustinWebb
 
 # THANKS
 
-    <name>
+    HTML5 Boilerplate team
 
 # TECHNOLOGY COLOPHON
 
     CSS3, HTML5
-    Apache Server Configs, jQuery, Modernizr, Normalize.css
+    Modernizr, Normalize.css
