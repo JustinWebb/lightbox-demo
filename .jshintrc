@@ -91,5 +91,6 @@
     // Custom Globals
     "globals"       : {
         "require" : true
-    }        // additional predefined global variables
+    }
+    // additional predefined global variables
 }
