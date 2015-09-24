@@ -2,7 +2,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 14:14:33
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-20 15:33:50
+* @Last Modified time: 2015-09-23 17:40:31
 */
 
 'use strict';
@@ -16,6 +16,7 @@ var paths = {
     'js/main.js'
   ],
   jsHelpers: ['js/helpers/**/*.js'],
+  stylesheet: ['css/main.css'],
   index: 'index.html'
 };
 
@@ -37,7 +38,9 @@ gulp.task('helpers', function () {
  * for changes
  */
 gulp.task('startup', function (cb) {
-  var watchPaths = paths.jsSrc.concat(paths.index);
+  var watchPaths = paths.jsSrc
+    .concat(paths.index)
+    .concat(paths.stylesheet);
 
   livereload.listen();
 
