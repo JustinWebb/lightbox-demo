@@ -33,7 +33,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 15:24:21
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-23 20:01:04
+* @Last Modified time: 2015-09-23 21:41:41
 */
 
 (function (window) {
@@ -58,7 +58,7 @@
   };
 
   var FlickrService = {
-    
+
     setHandlers: function (onSuccess, onFailure) {
       _onSuccess = onSuccess;
       _onFailure = onFailure;
@@ -82,7 +82,7 @@
         // print URL to the conosle for testing
         console.log('FlickrService:', url);
       } else {
-        // Make AJAX request to Flickr API
+        // make AJAX request to Flickr API
         var request = new XMLHttpRequest();
         request.onload = function () {
           var rt = null;
@@ -107,7 +107,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 22:09:35
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-23 19:40:41
+* @Last Modified time: 2015-09-23 20:59:00
 */
 (function (window) {
   'use strict';
@@ -119,7 +119,8 @@
     comp: null,
     submit: null,
   };
-  var SearchForm = function (domId, formAction) {
+
+  var SearchForm = function (domId) {
     this.form = null;
     this.results = null;
     // Ensure SearchForm HTML is properly constructed
@@ -129,19 +130,23 @@
         var msg = 'Element '+ domId +' not present on DOM';
         console.log(new ReferenceError(msg).stack);
       } else {
-
         this.form = _vm.comp.querySelector('form');
         this.form.addEventListener('submit', function (event) {
-          var se = null;
+          var se, query = null;
           event.preventDefault();
+          
+          // Get input data
+          query = this.querySelector('input[type=text]').value;
+
+          // Dispatch custom search event with input attached
           if (window.CustomEvent) {
             se = new CustomEvent('search', {
               bubbles: true,
               cancelable: true,
-              detail: {query: 'chocolate'}
+              detail: {query: query}
             });
           } else {
-            se = document.createEvent('search', true, true, {query: 'foo'});
+            se = document.createEvent('search', true, true, {query: query});
           }
           this.dispatchEvent(se);
         });

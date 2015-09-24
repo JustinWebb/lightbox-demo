@@ -2,7 +2,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 15:24:21
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-23 20:01:04
+* @Last Modified time: 2015-09-23 21:41:41
 */
 
 (function (window) {
@@ -27,7 +27,7 @@
   };
 
   var FlickrService = {
-    
+
     setHandlers: function (onSuccess, onFailure) {
       _onSuccess = onSuccess;
       _onFailure = onFailure;
@@ -51,7 +51,7 @@
         // print URL to the conosle for testing
         console.log('FlickrService:', url);
       } else {
-        // Make AJAX request to Flickr API
+        // make AJAX request to Flickr API
         var request = new XMLHttpRequest();
         request.onload = function () {
           var rt = null;
