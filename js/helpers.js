@@ -33,7 +33,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 15:24:21
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-23 16:11:12
+* @Last Modified time: 2015-09-23 20:01:04
 */
 
 (function (window) {
@@ -46,6 +46,8 @@
   var _method = 'method=flickr.photos.search';
   var _key = 'api_key=8fcaf784e87fdd001583cf05597a0945';
   var _format = 'format=json';
+  var _onFailure = null;
+  var _onSuccess = null;
 
   /**
    * Output error object to console
@@ -56,12 +58,17 @@
   };
 
   var FlickrService = {
+    
+    setHandlers: function (onSuccess, onFailure) {
+      _onSuccess = onSuccess;
+      _onFailure = onFailure;
+    },
 
     get: function (searchText, options) {
+      _onFailure = _onFailure || reportError;
+      _onSuccess = _onSuccess || null;
       searchText = searchText || 'chocolate';
       var count = options.count || 50;
-      var onFailure = options.onFailure || reportError;
-      var onSuccess = options.onSuccess || null;
       var args = [
         _method, 
         _key, 
@@ -71,7 +78,7 @@
       ];
       var url = _api.concat(args.join('&'));
 
-      if (onSuccess === null) {
+      if (_onSuccess === null) {
         // print URL to the conosle for testing
         console.log('FlickrService:', url);
       } else {
@@ -83,10 +90,10 @@
             rt = request.responseText;
             rt = rt.substr(0, rt.length - 1).replace('jsonFlickrApi(','');
             rt = JSON.parse(rt);
-            onSuccess(rt.photos);
+            _onSuccess(rt.photos);
           }
         };
-        request.onerror = onFailure;
+        request.onerror = _onFailure || reportError;
         request.open('GET', url, true);
         request.send();
       }
