@@ -2,7 +2,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 14:37:46
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-23 16:54:03
+* @Last Modified time: 2015-09-23 19:46:56
 * @Purpose: Demonstrate the following:
 * -- The ability to access to a public API and successfully retrieve 
 * data from it;
@@ -12,23 +12,30 @@
 */
 
 
-(function (JWLB) {
+(function (JWLB, $) {
   'use strict';
 
-  var printJSON = function (data) {
-    console.log('Main: ', data);
+  var sendQuery = function (data) {
+    JWLB.Model.FlickrService.get(data.query, _vm.flickrOps);
   };
 
+  var displayResults = function (photos) {
+    console.log('Main: ', photos);
+  };
+
+
   var _vm = {
-    ui: null,
+    search: null,
     flickrOps: {
       count: 50, 
-      onSuccess: printJSON
+      onSuccess: displayResults
     }
   };
 
+  // Event Handling
+  document.addEventListener('search', sendQuery);
+
   // Initialize Demo
-  _vm.ui = new JWLB.View.SearchForm('.container');
-  JWLB.Model.FlickrService.get('chocolate', _vm.flickrOps);
+  _vm.search = new JWLB.View.SearchForm('.search');
   
 })(window.JWLB);
