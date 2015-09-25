@@ -2,7 +2,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 14:37:46
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-24 13:55:25
+* @Last Modified time: 2015-09-24 18:30:39
 * @Purpose: Demonstrate the following:
 * -- The ability to access to a public API and successfully retrieve 
 * data from it;
@@ -15,29 +15,49 @@
 (function (JWLB) {
   'use strict';
 
-  var sendQuery = function (event) {
-    JWLB.Model.FlickrService.get(event.detail.query, _vm.flickrOps);
+  var displayPhoto = function (data) {
+      console.log('Photo', data);
   };
 
-  var displayResults = function (photos) {
-    console.log('Main: ', photos);
-    photos.photo.forEach(function (photo) {
-      console.log('Photo', photo);
+  var sendQuery = function (event) {
+    _vm.flickrOps.text = event.detail.query;
+    JWLB.Model.FlickrService.search(_vm.flickrOps, {
+      onSuccess: processSearchResults
     });
   };
 
+  var processSearchResults = function (photos) {
+    _vm.searchResult = photos;
+    var displaySet = _vm.searchResult.photo.slice(_vm.displayIndex, _vm.displayCount);
+    displaySet.forEach(function (photo) {
+      _vm.flickrOps.id = photo.id;
+      _vm.flickrOps.secret = photo.secret;
+      JWLB.Model.FlickrService.getInfo(_vm.flickrOps, {
+        onSuccess: displayPhoto
+      });
+    });
+    _vm.displayIndex += _vm.displayCount;
+  };
+
   var _vm = {
-    search: null,
+    searchForm: null,
+    resultsPanel: null,
+    searchResult: null,
+    displayCount: 10,
+    displayIndex: 0,
     flickrOps: {
-      count: 50
+      perPage: 50,
+      text: null,
+      id: null,
+      secret: null,
     }
   };
 
   // Event Handling
-  JWLB.Model.FlickrService.setHandlers(displayResults);
   document.addEventListener('search', sendQuery);
 
   // Initialize Demo
-  _vm.search = new JWLB.View.SearchForm('.search');
+  _vm.searchForm = new JWLB.View.SearchForm('.search');
+  _vm.resultsPanel = document.querySelector('.results');
   
 })(window.JWLB);
