@@ -2,7 +2,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 14:37:46
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-24 21:05:03
+* @Last Modified time: 2015-09-24 22:00:33
 * @Purpose: Demonstrate the following:
 * -- The ability to access to a public API and successfully retrieve 
 * data from it;
@@ -28,14 +28,14 @@
     displaySet.forEach(function (photo) {
       _vm.flickrOps.id = photo.id;
       JWLB.Model.FlickrService.getSizes(_vm.flickrOps, {
-        onSuccess: displayThumbnails
+        onSuccess: displayThumbnail
       });
     });
     _vm.displayIndex += _vm.displayCount;
   };
 
-  var displayThumbnails = function (data) {
-      console.log('Thumb', data);
+  var displayThumbnail = function (data) {
+      _vm.gallery.addThumb(data);
   };
 
   var _vm = {
@@ -55,8 +55,8 @@
   // Event Handling
   document.addEventListener('search', sendQuery);
 
-  // Initialize Demo
+  // Initialize UI
   _vm.searchForm = new JWLB.View.SearchForm('.search');
-  _vm.gallery = document.querySelector('.gallery');
+  _vm.gallery = new JWLB.View.Gallery('.gallery');
   
 })(window.JWLB);

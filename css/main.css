@@ -98,7 +98,7 @@ textarea {
 .container {
   padding: 10px;
 }
-.search {
+.search, .gallery {
   width: 100%;
 }
 
@@ -137,7 +137,11 @@ button {
 }
 
 
+.gallery {
 
+  min-height: 20px;
+  background-color: #f1f1f1;
+}
 
 
 
