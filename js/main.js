@@ -2,7 +2,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 14:37:46
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-24 22:00:33
+* @Last Modified time: 2015-09-24 22:05:50
 * @Purpose: Demonstrate the following:
 * -- The ability to access to a public API and successfully retrieve 
 * data from it;
@@ -35,7 +35,7 @@
   };
 
   var displayThumbnail = function (data) {
-      _vm.gallery.addThumb(data);
+    _vm.gallery.addThumb(data.sizes);
   };
 
   var _vm = {
