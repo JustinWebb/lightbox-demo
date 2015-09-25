@@ -2,7 +2,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 14:37:46
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-24 18:30:39
+* @Last Modified time: 2015-09-24 21:05:03
 * @Purpose: Demonstrate the following:
 * -- The ability to access to a public API and successfully retrieve 
 * data from it;
@@ -15,10 +15,6 @@
 (function (JWLB) {
   'use strict';
 
-  var displayPhoto = function (data) {
-      console.log('Photo', data);
-  };
-
   var sendQuery = function (event) {
     _vm.flickrOps.text = event.detail.query;
     JWLB.Model.FlickrService.search(_vm.flickrOps, {
@@ -26,23 +22,26 @@
     });
   };
 
-  var processSearchResults = function (photos) {
-    _vm.searchResult = photos;
-    var displaySet = _vm.searchResult.photo.slice(_vm.displayIndex, _vm.displayCount);
+  var processSearchResults = function (result) {
+    _vm.searchResults = result.photos;
+    var displaySet = _vm.searchResults.photo.slice(_vm.displayIndex, _vm.displayCount);
     displaySet.forEach(function (photo) {
       _vm.flickrOps.id = photo.id;
-      _vm.flickrOps.secret = photo.secret;
-      JWLB.Model.FlickrService.getInfo(_vm.flickrOps, {
-        onSuccess: displayPhoto
+      JWLB.Model.FlickrService.getSizes(_vm.flickrOps, {
+        onSuccess: displayThumbnails
       });
     });
     _vm.displayIndex += _vm.displayCount;
   };
 
+  var displayThumbnails = function (data) {
+      console.log('Thumb', data);
+  };
+
   var _vm = {
     searchForm: null,
-    resultsPanel: null,
-    searchResult: null,
+    gallery: null,
+    searchResults: null,
     displayCount: 10,
     displayIndex: 0,
     flickrOps: {
@@ -58,6 +57,6 @@
 
   // Initialize Demo
   _vm.searchForm = new JWLB.View.SearchForm('.search');
-  _vm.resultsPanel = document.querySelector('.results');
+  _vm.gallery = document.querySelector('.gallery');
   
 })(window.JWLB);

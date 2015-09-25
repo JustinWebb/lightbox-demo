@@ -33,7 +33,7 @@
 * @Author: justinwebb
 * @Date:   2015-09-20 15:24:21
 * @Last Modified by:   justinwebb
-* @Last Modified time: 2015-09-24 18:30:37
+* @Last Modified time: 2015-09-24 19:00:05
 */
 
 (function (window) {
@@ -45,6 +45,7 @@
   var _api = 'https://api.flickr.com/services/rest/?';
   var _method = {
     search: 'method=flickr.photos.search',
+    getSizes: 'method=flickr.photos.getSizes',
     getInfo: 'method=flickr.photos.getInfo'
   };
   var _key = 'api_key=8fcaf784e87fdd001583cf05597a0945';
@@ -72,6 +73,11 @@
       args.push('per_page='+ (options.perPage || 50));
     }
 
+    if (queryType === 'getSizes') {
+      args.push(_method.getSizes);
+      args.push('photo_id='+ options.id);
+    }
+
     if (queryType === 'getInfo') {
       args.push(_method.getInfo);
       args.push('photo_id='+ options.id);
@@ -97,7 +103,7 @@
           rt = request.responseText;
           rt = rt.substr(0, rt.length - 1).replace('jsonFlickrApi(','');
           rt = JSON.parse(rt);
-          onSuccess(rt.photos);
+          onSuccess(rt);
         }
       };
       request.onerror = onFailure || reportError;
@@ -107,6 +113,11 @@
 
 
   var FlickrService = {
+
+    getSizes: function (options, handler) {
+      var url = generateArgs('getSizes', options);
+      makeRequest(url, handler);
+    },
 
     getInfo: function (options, handler) {
       var url = generateArgs('getInfo', options);
