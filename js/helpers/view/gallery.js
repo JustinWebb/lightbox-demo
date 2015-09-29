@@ -10,9 +10,29 @@
   window.JWLB = window.JWLB || {};
   window.JWLB.View = window.JWLB.View || {};
 
+
+  //--------------------------------------------------------------------
+  // Event handling
+  //--------------------------------------------------------------------
+  var frameOnClick = function (event) {
+    var id = event.target.parentNode.dataset.id;
+    console.log('Gallery -- id: '+ id, event.target);
+    var selectedPhoto = this.photos.filter(function (photo) {
+      if (photo.id === id) {
+        photo.portrait.id = id;
+        return photo;
+      }
+    })[0];
+    this.sendEvent('portrait', selectedPhoto.portrait);
+  };
+
   //--------------------------------------------------------------------
   // View overrides
   //--------------------------------------------------------------------
+  var addUIListeners = function () {
+    this.ui.frame.addEventListener('click', frameOnClick.bind(this));
+  };
+
   var initUI = function () {
     var isUIValid = false;
     var comp = document.querySelector(this.selector);
@@ -24,14 +44,6 @@
     }
 
     return isUIValid;
-  };
-
-  var addUIListeners = function () {
-
-    this.ui.frame.addEventListener('click', function (event) {
-      var id = event.target.parentNode.dataset.id;
-      console.log('Gallery -- id: '+ id, event.target);
-    });
   };
 
   //--------------------------------------------------------------------
@@ -63,6 +75,7 @@
     console.log('Thumb -- id: ', id, 'data: ', data);
     // Store image data for future reference
     var photo = {
+      id: id,
       thumb: null,
       portrait: data.size[0]
     };

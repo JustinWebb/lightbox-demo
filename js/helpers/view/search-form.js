@@ -11,7 +11,7 @@
   window.JWLB.View = window.JWLB.View || {};
 
   //--------------------------------------------------------------------
-  // Event Handling
+  // Event handling
   //--------------------------------------------------------------------
   var inputOnInput = function (event) {
     // User enters data in search box

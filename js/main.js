@@ -14,6 +14,9 @@
 
 (function (JWLB) {
   'use strict';
+  var showLightbox = function (event) {
+    console.log(event.detail.portrait);
+  };
 
   var sendQuery = function (event) {
     _vm.flickrOps.text = event.detail.query;
@@ -55,6 +58,7 @@
 
   // Event Handling
   document.addEventListener('search', sendQuery);
+  document.addEventListener('portrait', showLightbox);
 
   // Initialize UI
   _vm.searchForm = new JWLB.View.SearchForm('.search');

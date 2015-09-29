@@ -54,8 +54,9 @@
     var se = null;
     var detail = null;
 
-    // Set detail object for custom event
+    // Set detail object for given custom event
     if (type === 'search') {detail = {query: data};}
+    if (type === 'portrait') {detail = {portrait: data};}
 
     // Dispatch custom event from component element
     if (window.CustomEvent) {
@@ -67,7 +68,11 @@
     } else {
       se = document.createEvent(type, true, true, detail);
     }
-    document.querySelector(this.selector).dispatchEvent(se);
+    this.comp().dispatchEvent(se);
+  };
+
+  View.prototype.comp = function () {
+    return document.querySelector(this.selector);
   };
 
   //--------------------------------------------------------------------

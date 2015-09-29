@@ -85,8 +85,9 @@
     var se = null;
     var detail = null;
 
-    // Set detail object for custom event
+    // Set detail object for given custom event
     if (type === 'search') {detail = {query: data};}
+    if (type === 'portrait') {detail = {portrait: data};}
 
     // Dispatch custom event from component element
     if (window.CustomEvent) {
@@ -98,7 +99,11 @@
     } else {
       se = document.createEvent(type, true, true, detail);
     }
-    document.querySelector(this.selector).dispatchEvent(se);
+    this.comp().dispatchEvent(se);
+  };
+
+  View.prototype.comp = function () {
+    return document.querySelector(this.selector);
   };
 
   //--------------------------------------------------------------------
@@ -226,9 +231,29 @@
   window.JWLB = window.JWLB || {};
   window.JWLB.View = window.JWLB.View || {};
 
+
+  //--------------------------------------------------------------------
+  // Event handling
+  //--------------------------------------------------------------------
+  var frameOnClick = function (event) {
+    var id = event.target.parentNode.dataset.id;
+    console.log('Gallery -- id: '+ id, event.target);
+    var selectedPhoto = this.photos.filter(function (photo) {
+      if (photo.id === id) {
+        photo.portrait.id = id;
+        return photo;
+      }
+    })[0];
+    this.sendEvent('portrait', selectedPhoto.portrait);
+  };
+
   //--------------------------------------------------------------------
   // View overrides
   //--------------------------------------------------------------------
+  var addUIListeners = function () {
+    this.ui.frame.addEventListener('click', frameOnClick.bind(this));
+  };
+
   var initUI = function () {
     var isUIValid = false;
     var comp = document.querySelector(this.selector);
@@ -240,14 +265,6 @@
     }
 
     return isUIValid;
-  };
-
-  var addUIListeners = function () {
-
-    this.ui.frame.addEventListener('click', function (event) {
-      var id = event.target.parentNode.dataset.id;
-      console.log('Gallery -- id: '+ id, event.target);
-    });
   };
 
   //--------------------------------------------------------------------
@@ -279,6 +296,7 @@
     console.log('Thumb -- id: ', id, 'data: ', data);
     // Store image data for future reference
     var photo = {
+      id: id,
       thumb: null,
       portrait: data.size[0]
     };
@@ -319,7 +337,7 @@
   window.JWLB.View = window.JWLB.View || {};
 
   //--------------------------------------------------------------------
-  // Event Handling
+  // Event handling
   //--------------------------------------------------------------------
   var inputOnInput = function (event) {
     // User enters data in search box
