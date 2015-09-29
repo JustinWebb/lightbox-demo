@@ -29,7 +29,84 @@
             console[method] = noop;
         }
     }
-}());;/*
+}());;(function (window) {
+
+  window.JWLB = window.JWLB || {};
+
+  //--------------------------------------------------------------------
+  // Constructor
+  //--------------------------------------------------------------------
+  var View = function (domId) {
+    var msg = '';
+    this.selector = domId;
+    this.ui = {};
+
+    // Initialize overriden UI build method
+    try {
+      if (!this.initUI(this.selector)) {
+        msg = 'DOM is malformed. Refer to '+ this.constructor
+        +' \'initUI\' method.';
+        console.log(new ReferenceError(msg).stack);
+      } else {
+        if (Object.keys(this.ui).length === 0) {
+          msg = this.constructor +' \'initUI\' method failed to create '
+          +'elements on the View.ui property.'
+          console.log(new TypeError(msg));
+        }
+        this.addUIListeners();
+      }
+    } catch (e) {
+      console.log(this.constructor, e);
+    }
+  };
+
+  //--------------------------------------------------------------------
+  // Inheritance (Base Class)
+  //--------------------------------------------------------------------
+  View.prototype = Object.create(View.prototype);
+  View.prototype.constructor = View;
+
+  //--------------------------------------------------------------------
+  // Abstract methods
+  //--------------------------------------------------------------------
+  View.prototype.initUI = function () {
+    var msg = 'View is abstract and cannot be instantiated. Override'+
+    '\'initUI\' method in View subclass.';
+    throw new ReferenceError(msg);
+  };
+
+  View.prototype.addUIListeners = function () {
+    var msg = 'View is abstract and cannot be instantiated. Override'+
+    '\'addUIListeners\' method in View subclass.';
+    throw new ReferenceError(msg);
+  };
+
+  View.prototype.sendEvent = function (type, data) {
+    var se = null;
+    var detail = null;
+
+    // Set detail object for custom event
+    if (type === 'search') {detail = {query: data};}
+
+    // Dispatch custom event from component element
+    if (window.CustomEvent) {
+      se = new CustomEvent(type, {
+        bubbles: true,
+        cancelable: true,
+        detail: detail
+      });
+    } else {
+      se = document.createEvent(type, true, true, detail);
+    }
+    document.querySelector(this.selector).dispatchEvent(se);
+  };
+
+  //--------------------------------------------------------------------
+  // Export base class
+  //--------------------------------------------------------------------
+  window.JWLB.View = View;
+})(window)
+;/*
 * @Author: justinwebb
 * @Date:   2015-09-20 15:24:21
 * @Last Modified by:   justinwebb
@@ -149,65 +226,87 @@
   window.JWLB = window.JWLB || {};
   window.JWLB.View = window.JWLB.View || {};
 
+  //--------------------------------------------------------------------
+  // View overrides
+  //--------------------------------------------------------------------
   var initUI = function () {
     var isUIValid = false;
-    var comp = document.querySelector(_vm.selector);
+    var comp = document.querySelector(this.selector);
 
-    _vm.ui.frame = comp;
+    this.ui.frame = comp;
 
-    if (_vm.ui.frame) {
+    if (this.ui.frame) {
       isUIValid = true;
     }
 
     return isUIValid;
   };
 
-  var addThumb = function (data, id) {
-    console.log('Thumb -- id: ', id, 'data: ', data);
-    var thumb = data.size.filter(function (elem) {
-      return (elem.label === 'Square');
-    })[0];
+  var addUIListeners = function () {
 
+    this.ui.frame.addEventListener('click', function (event) {
+      var id = event.target.parentNode.dataset.id;
+      console.log('Gallery -- id: '+ id, event.target);
+    });
+  };
+
+  //--------------------------------------------------------------------
+  // Constructor
+  //--------------------------------------------------------------------
+  var Gallery = function (domId) {
+    // Overriden View class methods
+    this.initUI = initUI;
+    this.addUIListeners = addUIListeners;
+
+    // Instance properties
+    this.photos = [];
+
+    // Initialize View
+    JWLB.View.call(this, domId);
+  };
+
+  //--------------------------------------------------------------------
+  // Inheritance
+  //--------------------------------------------------------------------
+  Gallery.prototype = Object.create(JWLB.View.prototype);
+  Gallery.prototype.constructor = Gallery;
+
+  //--------------------------------------------------------------------
+  // Instance methods
+  //--------------------------------------------------------------------
+
+  Gallery.prototype.addThumb = function (data, id) {
+    console.log('Thumb -- id: ', id, 'data: ', data);
+    // Store image data for future reference
+    var photo = {
+      thumb: null,
+      portrait: data.size[0]
+    };
+    data.size.forEach(function (elem) {
+      if (elem.label === 'Square') {
+        photo.thumb = elem;
+      }
+      if (elem.height > photo.portrait.height) {
+        photo.portrait = elem;
+      }
+    });
+    this.photos.push(photo);
+
+    // Build thumbnail UI
     var node = document.createElement('div');
     node.setAttribute('data-id', id);
     node.setAttribute('class', 'thumb');
     var img = document.createElement('img');
-    img.setAttribute('src', thumb.source);
+    img.setAttribute('src', photo.thumb.source);
     img.setAttribute('title', 'id: '+ id);
     node.appendChild(img);
-    _vm.ui.frame.appendChild(node);
+    this.ui.frame.appendChild(node);
   };
 
-  var _vm = {
-    selector: null,
-    ui: {
-      frame: null
-    }
-  };
-
-  var Gallery = function (domId) {
-    _vm.selector = domId;
-
-    this.addThumb = addThumb;
-
-    try {
-      if (!initUI()) {
-        var msg = 'DOM is malformed. Refer to Gallery \'initUI\' method.';
-        console.log(new ReferenceError(msg).stack);
-      } else {
-        _vm.ui.frame.addEventListener('click', function (event) {
-          console.log('Gallery: ', event.target);
-        });
-      }
-
-    } catch (e) {
-      console.log('Gallery: ', e);
-    }
-  };
 
   window.JWLB.View.Gallery = Gallery;
 })(window);
-;/* 
+;/*
 * @Author: justinwebb
 * @Date:   2015-09-20 22:09:35
 * @Last Modified by:   justinwebb
@@ -219,105 +318,99 @@
   window.JWLB = window.JWLB || {};
   window.JWLB.View = window.JWLB.View || {};
 
-  var _vm = {
-    selector: null,
-    ui: {
-      form: null,
-      input: null,
-      button: null
+  //--------------------------------------------------------------------
+  // Event Handling
+  //--------------------------------------------------------------------
+  var inputOnInput = function (event) {
+    // User enters data in search box
+    this.ui.button.disabled = (this.ui.input.value === '') ? true : false;
+  };
+
+  var inputOnKeypress = function (event) {
+    // User hits Enter while focused on input element
+    var e = event || window.event;
+    var code = e.which || e.keycode;
+    if (code === 13) {
+      event.preventDefault();
+      var query = this.validateInput();
+      if (query) {
+        this.sendEvent('search', query);
+      } else {
+        // TODO: provide user feedback for bad query
+        console.log('SearchForm: input is bad!');
+      }
     }
+  };
+
+  var formOnSubmit = function (event) {
+    // User sends query
+    event.preventDefault();
+    var query = this.validateInput();
+    if (query) {
+      this.sendEvent('search', query);
+    } else {
+      // TODO: provide user feedback for bad query
+      console.log('SearchForm: input is bad!');
+    }
+  };
+
+  //--------------------------------------------------------------------
+  // View overrides
+  //--------------------------------------------------------------------
+  var addUIListeners = function () {
+    this.ui.input.addEventListener('input', inputOnInput.bind(this));
+    this.ui.input.addEventListener('keypress', inputOnKeypress.bind(this));
+    this.ui.form.addEventListener('submit', formOnSubmit.bind(this));
   };
 
   var initUI = function () {
     var isUIValid = false;
-    var comp = document.querySelector(_vm.selector);
+    var comp = document.querySelector(this.selector);
 
-    _vm.ui.form = comp.querySelector('form');
-    _vm.ui.input = comp.querySelector('form input[type=search]');
-    _vm.ui.button = comp.querySelector('form button[type=submit]');
+    this.ui.form = comp.querySelector('form');
+    this.ui.input = comp.querySelector('form input[type=search]');
+    this.ui.button = comp.querySelector('form button[type=submit]');
 
-    if (_vm.ui.form && _vm.ui.input && _vm.ui.button) {
+    if (this.ui.form && this.ui.input && this.ui.button) {
       isUIValid = true;
 
       // set state for form elements
-      _vm.ui.input.value = '';
-      // _vm.ui.input.setAttribute('required', true);
-      // _vm.ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
-      _vm.ui.button.disabled = true;
+      this.ui.input.value = '';
+      // this.ui.input.setAttribute('required', true);
+      // this.ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
+      this.ui.button.disabled = true;
     }
     return isUIValid;
   };
 
-  var validateInput = function () {
+  //--------------------------------------------------------------------
+  // Constructor
+  //--------------------------------------------------------------------
+  var SearchForm = function (domId) {
+    // Overriden View class methods
+    this.initUI = initUI;
+    this.addUIListeners = addUIListeners;
+
+    // Initialize View
+    JWLB.View.call(this, domId);
+  };
+
+  //--------------------------------------------------------------------
+  // Inheritance
+  //--------------------------------------------------------------------
+  SearchForm.prototype = Object.create(JWLB.View.prototype);
+  SearchForm.prototype.constructor = SearchForm;
+
+  //--------------------------------------------------------------------
+  // Instance methods
+  //--------------------------------------------------------------------
+  SearchForm.prototype.validateInput = function () {
     // var data = null;
-    // if (_vm.ui.input.validity.patternMismatch) {
-    //   data = _vm.ui.input.value;
+    // if (this.ui.input.validity.patternMismatch) {
+    //   data = this.ui.input.value;
     // }
     // return data;
-    return _vm.ui.input.value;
-  };
-
-  var dispatchSearchEvent = function (query) {
-    var se = null;
-    if (window.CustomEvent) {
-      se = new CustomEvent('search', {
-        bubbles: true,
-        cancelable: true,
-        detail: {query: query}
-      });
-    } else {
-      se = document.createEvent('search', true, true, {query: query});
-    }
-    _vm.ui.form.dispatchEvent(se);
-  };
-
-  var SearchForm = function (domId) {
-    _vm.selector = domId;
-    try {
-      if (!initUI()) {
-        var msg = 'DOM is malformed. Refer to SearchForm \'initUI\' method.';
-        console.log(new ReferenceError(msg).stack);
-      } else {
-        // User enters data in search box
-        // var inputEvents = 'propertychange change click keyup input paste';
-        _vm.ui.input.addEventListener('input', function (event) {
-          _vm.ui.button.disabled = (_vm.ui.input.value === '') ? true : false;
-        });
-
-        _vm.ui.input.addEventListener('keypress', function (event) {
-          var e = event || window.event;
-          var code = e.which || e.keycode;
-          if (code === 13) {
-            event.preventDefault();
-            var query = validateInput();
-            if (query) {
-              dispatchSearchEvent(query);
-            } else {
-              // TODO: provide user feedback for bad query
-              console.log('SearchForm: input is bad!');
-          }          }
-        });
-
-        // User sends query
-        _vm.ui.form.addEventListener('submit', function (event) {
-          event.preventDefault();
-          var query = validateInput();
-          if (query) {
-            dispatchSearchEvent(query);
-          } else {
-            // TODO: provide user feedback for bad query
-            console.log('SearchForm: input is bad!');
-          }
-        });
-      }
-    } catch (e) {
-      console.log('SearchForm: ', e);
-    }
-  };
-
-  window.JWLB.checkForm = function (e) {
-    console.log('Check: ', e);
-    return false;
+    return this.ui.input.value;
   };
 
   window.JWLB.View.SearchForm = SearchForm;

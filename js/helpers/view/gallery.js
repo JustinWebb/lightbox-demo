@@ -10,61 +10,83 @@
   window.JWLB = window.JWLB || {};
   window.JWLB.View = window.JWLB.View || {};
 
+  //--------------------------------------------------------------------
+  // View overrides
+  //--------------------------------------------------------------------
   var initUI = function () {
     var isUIValid = false;
-    var comp = document.querySelector(_vm.selector);
+    var comp = document.querySelector(this.selector);
 
-    _vm.ui.frame = comp;
+    this.ui.frame = comp;
 
-    if (_vm.ui.frame) {
+    if (this.ui.frame) {
       isUIValid = true;
     }
 
     return isUIValid;
   };
 
-  var addThumb = function (data, id) {
-    console.log('Thumb -- id: ', id, 'data: ', data);
-    var thumb = data.size.filter(function (elem) {
-      return (elem.label === 'Square');
-    })[0];
+  var addUIListeners = function () {
 
+    this.ui.frame.addEventListener('click', function (event) {
+      var id = event.target.parentNode.dataset.id;
+      console.log('Gallery -- id: '+ id, event.target);
+    });
+  };
+
+  //--------------------------------------------------------------------
+  // Constructor
+  //--------------------------------------------------------------------
+  var Gallery = function (domId) {
+    // Overriden View class methods
+    this.initUI = initUI;
+    this.addUIListeners = addUIListeners;
+
+    // Instance properties
+    this.photos = [];
+
+    // Initialize View
+    JWLB.View.call(this, domId);
+  };
+
+  //--------------------------------------------------------------------
+  // Inheritance
+  //--------------------------------------------------------------------
+  Gallery.prototype = Object.create(JWLB.View.prototype);
+  Gallery.prototype.constructor = Gallery;
+
+  //--------------------------------------------------------------------
+  // Instance methods
+  //--------------------------------------------------------------------
+
+  Gallery.prototype.addThumb = function (data, id) {
+    console.log('Thumb -- id: ', id, 'data: ', data);
+    // Store image data for future reference
+    var photo = {
+      thumb: null,
+      portrait: data.size[0]
+    };
+    data.size.forEach(function (elem) {
+      if (elem.label === 'Square') {
+        photo.thumb = elem;
+      }
+      if (elem.height > photo.portrait.height) {
+        photo.portrait = elem;
+      }
+    });
+    this.photos.push(photo);
+
+    // Build thumbnail UI
     var node = document.createElement('div');
     node.setAttribute('data-id', id);
     node.setAttribute('class', 'thumb');
     var img = document.createElement('img');
-    img.setAttribute('src', thumb.source);
+    img.setAttribute('src', photo.thumb.source);
     img.setAttribute('title', 'id: '+ id);
     node.appendChild(img);
-    _vm.ui.frame.appendChild(node);
+    this.ui.frame.appendChild(node);
   };
 
-  var _vm = {
-    selector: null,
-    ui: {
-      frame: null
-    }
-  };
-
-  var Gallery = function (domId) {
-    _vm.selector = domId;
-
-    this.addThumb = addThumb;
-
-    try {
-      if (!initUI()) {
-        var msg = 'DOM is malformed. Refer to Gallery \'initUI\' method.';
-        console.log(new ReferenceError(msg).stack);
-      } else {
-        _vm.ui.frame.addEventListener('click', function (event) {
-          console.log('Gallery: ', event.target);
-        });
-      }
-
-    } catch (e) {
-      console.log('Gallery: ', e);
-    }
-  };
 
   window.JWLB.View.Gallery = Gallery;
 })(window);

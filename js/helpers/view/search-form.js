@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: justinwebb
 * @Date:   2015-09-20 22:09:35
 * @Last Modified by:   justinwebb
@@ -10,105 +10,99 @@
   window.JWLB = window.JWLB || {};
   window.JWLB.View = window.JWLB.View || {};
 
-  var _vm = {
-    selector: null,
-    ui: {
-      form: null,
-      input: null,
-      button: null
+  //--------------------------------------------------------------------
+  // Event Handling
+  //--------------------------------------------------------------------
+  var inputOnInput = function (event) {
+    // User enters data in search box
+    this.ui.button.disabled = (this.ui.input.value === '') ? true : false;
+  };
+
+  var inputOnKeypress = function (event) {
+    // User hits Enter while focused on input element
+    var e = event || window.event;
+    var code = e.which || e.keycode;
+    if (code === 13) {
+      event.preventDefault();
+      var query = this.validateInput();
+      if (query) {
+        this.sendEvent('search', query);
+      } else {
+        // TODO: provide user feedback for bad query
+        console.log('SearchForm: input is bad!');
+      }
     }
+  };
+
+  var formOnSubmit = function (event) {
+    // User sends query
+    event.preventDefault();
+    var query = this.validateInput();
+    if (query) {
+      this.sendEvent('search', query);
+    } else {
+      // TODO: provide user feedback for bad query
+      console.log('SearchForm: input is bad!');
+    }
+  };
+
+  //--------------------------------------------------------------------
+  // View overrides
+  //--------------------------------------------------------------------
+  var addUIListeners = function () {
+    this.ui.input.addEventListener('input', inputOnInput.bind(this));
+    this.ui.input.addEventListener('keypress', inputOnKeypress.bind(this));
+    this.ui.form.addEventListener('submit', formOnSubmit.bind(this));
   };
 
   var initUI = function () {
     var isUIValid = false;
-    var comp = document.querySelector(_vm.selector);
+    var comp = document.querySelector(this.selector);
 
-    _vm.ui.form = comp.querySelector('form');
-    _vm.ui.input = comp.querySelector('form input[type=search]');
-    _vm.ui.button = comp.querySelector('form button[type=submit]');
+    this.ui.form = comp.querySelector('form');
+    this.ui.input = comp.querySelector('form input[type=search]');
+    this.ui.button = comp.querySelector('form button[type=submit]');
 
-    if (_vm.ui.form && _vm.ui.input && _vm.ui.button) {
+    if (this.ui.form && this.ui.input && this.ui.button) {
       isUIValid = true;
 
       // set state for form elements
-      _vm.ui.input.value = '';
-      // _vm.ui.input.setAttribute('required', true);
-      // _vm.ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
-      _vm.ui.button.disabled = true;
+      this.ui.input.value = '';
+      // this.ui.input.setAttribute('required', true);
+      // this.ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
+      this.ui.button.disabled = true;
     }
     return isUIValid;
   };
 
-  var validateInput = function () {
+  //--------------------------------------------------------------------
+  // Constructor
+  //--------------------------------------------------------------------
+  var SearchForm = function (domId) {
+    // Overriden View class methods
+    this.initUI = initUI;
+    this.addUIListeners = addUIListeners;
+
+    // Initialize View
+    JWLB.View.call(this, domId);
+  };
+
+  //--------------------------------------------------------------------
+  // Inheritance
+  //--------------------------------------------------------------------
+  SearchForm.prototype = Object.create(JWLB.View.prototype);
+  SearchForm.prototype.constructor = SearchForm;
+
+  //--------------------------------------------------------------------
+  // Instance methods
+  //--------------------------------------------------------------------
+  SearchForm.prototype.validateInput = function () {
     // var data = null;
-    // if (_vm.ui.input.validity.patternMismatch) {
-    //   data = _vm.ui.input.value;
+    // if (this.ui.input.validity.patternMismatch) {
+    //   data = this.ui.input.value;
     // }
     // return data;
-    return _vm.ui.input.value;
-  };
-
-  var dispatchSearchEvent = function (query) {
-    var se = null;
-    if (window.CustomEvent) {
-      se = new CustomEvent('search', {
-        bubbles: true,
-        cancelable: true,
-        detail: {query: query}
-      });
-    } else {
-      se = document.createEvent('search', true, true, {query: query});
-    }
-    _vm.ui.form.dispatchEvent(se);
-  };
-
-  var SearchForm = function (domId) {
-    _vm.selector = domId;
-    try {
-      if (!initUI()) {
-        var msg = 'DOM is malformed. Refer to SearchForm \'initUI\' method.';
-        console.log(new ReferenceError(msg).stack);
-      } else {
-        // User enters data in search box
-        // var inputEvents = 'propertychange change click keyup input paste';
-        _vm.ui.input.addEventListener('input', function (event) {
-          _vm.ui.button.disabled = (_vm.ui.input.value === '') ? true : false;
-        });
-
-        _vm.ui.input.addEventListener('keypress', function (event) {
-          var e = event || window.event;
-          var code = e.which || e.keycode;
-          if (code === 13) {
-            event.preventDefault();
-            var query = validateInput();
-            if (query) {
-              dispatchSearchEvent(query);
-            } else {
-              // TODO: provide user feedback for bad query
-              console.log('SearchForm: input is bad!');
-          }          }
-        });
-
-        // User sends query
-        _vm.ui.form.addEventListener('submit', function (event) {
-          event.preventDefault();
-          var query = validateInput();
-          if (query) {
-            dispatchSearchEvent(query);
-          } else {
-            // TODO: provide user feedback for bad query
-            console.log('SearchForm: input is bad!');
-          }
-        });
-      }
-    } catch (e) {
-      console.log('SearchForm: ', e);
-    }
-  };
-
-  window.JWLB.checkForm = function (e) {
-    console.log('Check: ', e);
-    return false;
+    return this.ui.input.value;
   };
 
   window.JWLB.View.SearchForm = SearchForm;
