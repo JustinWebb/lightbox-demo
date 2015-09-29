@@ -24,15 +24,19 @@
   };
 
   var addThumb = function (data, id) {
-    console.log('Thumb -- id: ', id, ', data: ', data);
+    console.log('Thumb -- id: ', id, 'data: ', data);
     var thumb = data.size.filter(function (elem) {
       return (elem.label === 'Square');
     })[0];
+
+    var node = document.createElement('div');
+    node.setAttribute('data-id', id);
+    node.setAttribute('class', 'thumb');
     var img = document.createElement('img');
     img.setAttribute('src', thumb.source);
-    img.setAttribute('width', thumb.width);
-    img.setAttribute('height', thumb.height);
-    _vm.ui.frame.appendChild(img);
+    img.setAttribute('title', 'id: '+ id);
+    node.appendChild(img);
+    _vm.ui.frame.appendChild(node);
   };
 
   var _vm = {

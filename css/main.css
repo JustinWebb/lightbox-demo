@@ -143,6 +143,21 @@ button {
   background-color: #f1f1f1;
 }
 
+.thumb {
+  float: left;
+  max-width: 69px;
+  max-height: 69px;
+  padding: 1px;
+  margin: 1px;
+  border: 1px solid #222;
+  cursor: pointer;
+}
+
+.thumb img {
+  max-width: 100%;
+}
+
+
 
 
 
