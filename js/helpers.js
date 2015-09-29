@@ -29,7 +29,7 @@
             console[method] = noop;
         }
     }
-}());;/* 
+}());;/*
 * @Author: justinwebb
 * @Date:   2015-09-20 15:24:21
 * @Last Modified by:   justinwebb
@@ -93,7 +93,7 @@
    * @param  {String} url     URL with querystring params
    * @param  {Object} handler callbacks for success and failure
    */
-  var makeRequest = function (url, handler) {
+  var makeRequest = function (url, handler, id) {
       var onFailure = handler.onFailure || reportError;
       var onSuccess = handler.onSuccess || null;
       var request = new XMLHttpRequest();
@@ -103,7 +103,7 @@
           rt = request.responseText;
           rt = rt.substr(0, rt.length - 1).replace('jsonFlickrApi(','');
           rt = JSON.parse(rt);
-          onSuccess(rt);
+          onSuccess(rt, id);
         }
       };
       request.onerror = onFailure || reportError;
@@ -116,7 +116,7 @@
 
     getSizes: function (options, handler) {
       var url = generateArgs('getSizes', options);
-      makeRequest(url, handler);
+      makeRequest(url, handler, options.id);
     },
 
     getInfo: function (options, handler) {
@@ -137,7 +137,7 @@
   window.JWLB.Model.FlickrService = FlickrService;
 
 })(window);
-;/* 
+;/*
 * @Author: justinwebb
 * @Date:   2015-09-24 21:08:23
 * @Last Modified by:   justinwebb
@@ -162,8 +162,8 @@
     return isUIValid;
   };
 
-  var addThumb = function (data) {
-    console.log('Thumb', data);
+  var addThumb = function (data, id) {
+    console.log('Thumb -- id: ', id, ', data: ', data);
     var thumb = data.size.filter(function (elem) {
       return (elem.label === 'Square');
     })[0];
@@ -202,7 +202,8 @@
   };
 
   window.JWLB.View.Gallery = Gallery;
-})(window);;/* 
+})(window);
+;/* 
 * @Author: justinwebb
 * @Date:   2015-09-20 22:09:35
 * @Last Modified by:   justinwebb

@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: justinwebb
 * @Date:   2015-09-24 21:08:23
 * @Last Modified by:   justinwebb
@@ -23,8 +23,8 @@
     return isUIValid;
   };
 
-  var addThumb = function (data) {
-    console.log('Thumb', data);
+  var addThumb = function (data, id) {
+    console.log('Thumb -- id: ', id, ', data: ', data);
     var thumb = data.size.filter(function (elem) {
       return (elem.label === 'Square');
     })[0];
