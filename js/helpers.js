@@ -338,10 +338,10 @@
   //--------------------------------------------------------------------
   var doSomething = function (event) {
     event.stopImmediatePropagation();
-    if (event.currentTarget === this.ui.portrait) {
-      console.log(this.name, event.currentTarget);
-    } else {
+    if (event.target === this.ui.portrait) {
       this.hide();
+    } else {
+      console.log(this.name, event.target);
     }
   };
 
@@ -390,8 +390,6 @@
     this.addUIListeners = addUIListeners;
     this.name = 'Portrait';
 
-    this.viewedPics = [];
-
     JWLB.View.call(this, domId);
   }
 
@@ -410,8 +408,9 @@
   };
 
   Portrait.prototype.hide = function () {
-    var img = this.ui.portrait.querySelector('img').remove();
-    this.viewedPics.push(img);
+    var img = this.ui.portrait.querySelector('img');
+    img.onload = null;
+    img.remove();
     document.querySelector(this.selector).removeChild(this.ui.portrait);
   };
 
