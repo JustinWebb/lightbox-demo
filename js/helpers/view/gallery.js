@@ -14,32 +14,34 @@
   //--------------------------------------------------------------------
   // Event handling
   //--------------------------------------------------------------------
-  var frameOnClick = function (event) {
-    var id = event.target.parentNode.dataset.id;
-    console.log('Gallery -- id: '+ id, event.target);
-    var selectedPhoto = this.photos.filter(function (photo) {
-      if (photo.id === id) {
-        photo.portrait.id = id;
-        return photo;
-      }
-    })[0];
-    this.sendEvent('portrait', selectedPhoto.portrait);
+  var wallOnClick = function (event) {
+
+    if (event.target.tagName.toLowerCase() === 'img') {
+      var id = event.target.parentNode.dataset.id;
+      var selectedPhoto = this.photos.filter(function (photo) {
+        if (photo.id === id) {
+          photo.portrait.id = id;
+          return photo;
+        }
+      })[0];
+      this.sendEvent('gallery', selectedPhoto.portrait);
+    }
   };
 
   //--------------------------------------------------------------------
   // View overrides
   //--------------------------------------------------------------------
   var addUIListeners = function () {
-    this.ui.frame.addEventListener('click', frameOnClick.bind(this));
+    this.ui.wall.addEventListener('click', wallOnClick.bind(this));
   };
 
   var initUI = function () {
     var isUIValid = false;
     var comp = document.querySelector(this.selector);
 
-    this.ui.frame = comp;
+    this.ui.wall = comp;
 
-    if (this.ui.frame) {
+    if (this.ui.wall) {
       isUIValid = true;
     }
 
@@ -72,7 +74,6 @@
   //--------------------------------------------------------------------
 
   Gallery.prototype.addThumb = function (data, id) {
-    console.log('Thumb -- id: ', id, 'data: ', data);
     // Store image data for future reference
     var photo = {
       id: id,
@@ -97,7 +98,7 @@
     img.setAttribute('src', photo.thumb.source);
     img.setAttribute('title', 'id: '+ id);
     node.appendChild(img);
-    this.ui.frame.appendChild(node);
+    this.ui.wall.appendChild(node);
   };
 
 

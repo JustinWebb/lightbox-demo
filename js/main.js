@@ -14,8 +14,18 @@
 
 (function (JWLB) {
   'use strict';
-  var showLightbox = function (event) {
-    console.log(event.detail.portrait);
+  //--------------------------------------------------------------------
+  // Event handling
+  //--------------------------------------------------------------------
+  var displayPortrait = function (event) {
+    var portrait = event.detail.portrait;
+
+    // Retrive display info for target image
+    var notes = _vm.searchResults.photo.filter(function(p) {
+      if (p.id === portrait.id) {return p}
+    })[0];
+    portrait.title = notes.title;
+    _vm.portraitFrame.show(portrait);
   };
 
   var sendQuery = function (event) {
@@ -25,17 +35,23 @@
     });
   };
 
+  //--------------------------------------------------------------------
+  // Utility
+  //--------------------------------------------------------------------
   var processSearchResults = function (result) {
     _vm.searchResults = result.photos;
     console.log('_vm.searchResults: ', _vm.searchResults);
-    var displaySet = _vm.searchResults.photo.slice(_vm.displayIndex, _vm.displayCount);
+    var displaySet = _vm.searchResults.photo.slice(
+      _vm.viewIndex,
+      _vm.viewCount
+    );
     displaySet.forEach(function (photo) {
       _vm.flickrOps.id = photo.id;
       JWLB.Model.FlickrService.getSizes(_vm.flickrOps, {
         onSuccess: displayThumbnail
       });
     });
-    _vm.displayIndex += _vm.displayCount;
+    _vm.viewIndex += _vm.viewCount;
   };
 
   var displayThumbnail = function (data, id) {
@@ -46,8 +62,8 @@
     searchForm: null,
     gallery: null,
     searchResults: null,
-    displayCount: 10,
-    displayIndex: 0,
+    viewCount: 50,
+    viewIndex: 0,
     flickrOps: {
       perPage: 50,
       text: null,
@@ -58,10 +74,11 @@
 
   // Event Handling
   document.addEventListener('search', sendQuery);
-  document.addEventListener('portrait', showLightbox);
+  document.addEventListener('gallery', displayPortrait);
 
   // Initialize UI
   _vm.searchForm = new JWLB.View.SearchForm('.search');
   _vm.gallery = new JWLB.View.Gallery('.gallery');
+  _vm.portraitFrame = new JWLB.View.Portrait('body');
 
 })(window.JWLB);

@@ -56,7 +56,7 @@
 
     // Set detail object for given custom event
     if (type === 'search') {detail = {query: data};}
-    if (type === 'portrait') {detail = {portrait: data};}
+    if (type === 'gallery') {detail = {portrait: data};}
 
     // Dispatch custom event from component element
     if (window.CustomEvent) {

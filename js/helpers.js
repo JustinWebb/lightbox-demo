@@ -87,7 +87,7 @@
 
     // Set detail object for given custom event
     if (type === 'search') {detail = {query: data};}
-    if (type === 'portrait') {detail = {portrait: data};}
+    if (type === 'gallery') {detail = {portrait: data};}
 
     // Dispatch custom event from component element
     if (window.CustomEvent) {
@@ -235,32 +235,34 @@
   //--------------------------------------------------------------------
   // Event handling
   //--------------------------------------------------------------------
-  var frameOnClick = function (event) {
-    var id = event.target.parentNode.dataset.id;
-    console.log('Gallery -- id: '+ id, event.target);
-    var selectedPhoto = this.photos.filter(function (photo) {
-      if (photo.id === id) {
-        photo.portrait.id = id;
-        return photo;
-      }
-    })[0];
-    this.sendEvent('portrait', selectedPhoto.portrait);
+  var wallOnClick = function (event) {
+
+    if (event.target.tagName.toLowerCase() === 'img') {
+      var id = event.target.parentNode.dataset.id;
+      var selectedPhoto = this.photos.filter(function (photo) {
+        if (photo.id === id) {
+          photo.portrait.id = id;
+          return photo;
+        }
+      })[0];
+      this.sendEvent('gallery', selectedPhoto.portrait);
+    }
   };
 
   //--------------------------------------------------------------------
   // View overrides
   //--------------------------------------------------------------------
   var addUIListeners = function () {
-    this.ui.frame.addEventListener('click', frameOnClick.bind(this));
+    this.ui.wall.addEventListener('click', wallOnClick.bind(this));
   };
 
   var initUI = function () {
     var isUIValid = false;
     var comp = document.querySelector(this.selector);
 
-    this.ui.frame = comp;
+    this.ui.wall = comp;
 
-    if (this.ui.frame) {
+    if (this.ui.wall) {
       isUIValid = true;
     }
 
@@ -293,7 +295,6 @@
   //--------------------------------------------------------------------
 
   Gallery.prototype.addThumb = function (data, id) {
-    console.log('Thumb -- id: ', id, 'data: ', data);
     // Store image data for future reference
     var photo = {
       id: id,
@@ -318,11 +319,72 @@
     img.setAttribute('src', photo.thumb.source);
     img.setAttribute('title', 'id: '+ id);
     node.appendChild(img);
-    this.ui.frame.appendChild(node);
+    this.ui.wall.appendChild(node);
   };
 
 
   window.JWLB.View.Gallery = Gallery;
+})(window);
+;(function (window) {
+  'use strict';
+
+  window.JWLB = window.JWLB || {};
+  window.JWLB.View = window.JWLB.View || {};
+
+  //--------------------------------------------------------------------
+  // Event handling
+  //--------------------------------------------------------------------
+  var doSomething = function (event) {
+    console.log(this.constructor, event);
+  }
+
+  //--------------------------------------------------------------------
+  // View Overrides
+  //--------------------------------------------------------------------
+  var addUIListeners = function () {
+    this.ui.frame.addEventListener('click', doSomething.bind(this));
+  }
+
+  var initUI = function () {
+    var isUIValid = false;
+    var comp = document.createElement('section');
+    comp.setAttribute('class', 'portrait');
+    this.ui.frame = comp;
+
+    if (this.ui.frame) {
+      isUIValid = true;
+    }
+
+    return isUIValid;
+  };
+  //--------------------------------------------------------------------
+  // Constructor
+  //--------------------------------------------------------------------
+  var Portrait = function (domId) {
+
+    this.initUI = initUI;
+    this.addUIListeners = addUIListeners;
+
+    JWLB.View.call(this, domId);
+  }
+
+  Portrait.prototype = Object.create(JWLB.View.prototype);
+  Portrait.prototype.constructor = Portrait;
+
+  Portrait.prototype.show = function (pic) {
+    var img = document.createElement('img');
+    img.setAttribute('src', pic.source);
+    img.setAttribute('title', pic.title);
+    this.ui.frame.appendChild(img);
+    document.querySelector(this.selector).appendChild(this.ui.frame);
+  };
+
+  Portrait.prototype.hide = function () {
+    document.querySelector(this.selector).removeChild(this.ui.frame);
+  };
+
+  window.JWLB.View.Portrait = Portrait;
+
 })(window);
 ;/*
 * @Author: justinwebb
