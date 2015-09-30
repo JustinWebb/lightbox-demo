@@ -83,6 +83,6 @@
   // Initialize UI
   _vm.searchForm = new JWLB.View.SearchForm('.search');
   _vm.gallery = new JWLB.View.Gallery('.gallery');
-  _vm.portraitFrame = new JWLB.View.Portrait('body');
+  _vm.portraitFrame = new JWLB.View.Portrait();
 
 })(window.JWLB);

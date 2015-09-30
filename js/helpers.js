@@ -38,25 +38,26 @@
   //--------------------------------------------------------------------
   var View = function (domId) {
     var msg = '';
-    this.selector = domId;
+    this.selector = domId || 'body';
     this.ui = {};
+    this.name = this.name || 'View';
 
     // Initialize overriden UI build method
     try {
       if (!this.initUI(this.selector)) {
-        msg = 'DOM is malformed. Refer to '+ this.constructor
+        msg = 'DOM is malformed. Refer to '+ this.name
         +' \'initUI\' method.';
         console.log(new ReferenceError(msg).stack);
       } else {
         if (Object.keys(this.ui).length === 0) {
-          msg = this.constructor +' \'initUI\' method failed to create '
+          msg = this.name +' \'initUI\' method failed to create '
           +'elements on the View.ui property.'
           console.log(new TypeError(msg));
         }
         this.addUIListeners();
       }
     } catch (e) {
-      console.log(this.constructor, e);
+      console.log(this.name, e);
     }
   };
 
@@ -276,6 +277,7 @@
     // Overriden View class methods
     this.initUI = initUI;
     this.addUIListeners = addUIListeners;
+    this.name = 'Gallery';
 
     // Instance properties
     this.photos = [];
@@ -335,25 +337,32 @@
   // Event handling
   //--------------------------------------------------------------------
   var doSomething = function (event) {
-    console.log(this.constructor, event);
     event.stopImmediatePropagation();
-
-  }
+    if (event.currentTarget === this.ui.portrait) {
+      console.log(this.name, event.currentTarget);
+    } else {
+      this.hide();
+    }
+  };
 
   //--------------------------------------------------------------------
   // View Overrides
   //--------------------------------------------------------------------
   var addUIListeners = function () {
-    this.ui.frame.addEventListener('click', doSomething.bind(this));
+    this.ui.portrait.addEventListener('click', doSomething.bind(this));
   }
 
   var initUI = function () {
     var isUIValid = false;
     var comp = document.createElement('section');
     comp.setAttribute('class', 'portrait');
-    this.ui.frame = comp;
+    var canvas = document.createElement('div');
+    canvas.setAttribute('class', 'canvas');
+    comp.appendChild(canvas);
+    this.ui.portrait = comp;
 
-    if (this.ui.frame) {
+    if (this.ui.portrait) {
+      _vm.canvasSelector = 'section.portrait > .canvas';
       isUIValid = true;
     }
 
@@ -373,12 +382,13 @@
   // Constructor
   //--------------------------------------------------------------------
   var _vm = {
-    canvasSelector: 'section.portrait > .canvas'
+    canvasSelector: null
   };
   var Portrait = function (domId) {
 
     this.initUI = initUI;
     this.addUIListeners = addUIListeners;
+    this.name = 'Portrait';
 
     this.viewedPics = [];
 
@@ -395,17 +405,14 @@
     img.setAttribute('src', pic.source);
     img.setAttribute('title', pic.title);
     img.onload = imgCenterCanvasOnScreen;
-    var canvas = document.createElement('div');
-    canvas.setAttribute('class', 'canvas');
-    canvas.appendChild(img);
-    this.ui.frame.appendChild(canvas);
-    document.querySelector(this.selector).appendChild(this.ui.frame);
+    this.ui.portrait.querySelector('.canvas').appendChild(img);
+    document.querySelector(this.selector).appendChild(this.ui.portrait);
   };
 
   Portrait.prototype.hide = function () {
-    var img = this.ui.frame.querySelector('img').remove();
+    var img = this.ui.portrait.querySelector('img').remove();
     this.viewedPics.push(img);
-    document.querySelector(this.selector).removeChild(this.ui.frame);
+    document.querySelector(this.selector).removeChild(this.ui.portrait);
   };
 
   window.JWLB.View.Portrait = Portrait;
@@ -495,6 +502,7 @@
     // Overriden View class methods
     this.initUI = initUI;
     this.addUIListeners = addUIListeners;
+    this.name = 'SearchForm';
 
     // Initialize View
     JWLB.View.call(this, domId);

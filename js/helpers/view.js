@@ -7,25 +7,26 @@
   //--------------------------------------------------------------------
   var View = function (domId) {
     var msg = '';
-    this.selector = domId;
+    this.selector = domId || 'body';
     this.ui = {};
+    this.name = this.name || 'View';
 
     // Initialize overriden UI build method
     try {
       if (!this.initUI(this.selector)) {
-        msg = 'DOM is malformed. Refer to '+ this.constructor
+        msg = 'DOM is malformed. Refer to '+ this.name
         +' \'initUI\' method.';
         console.log(new ReferenceError(msg).stack);
       } else {
         if (Object.keys(this.ui).length === 0) {
-          msg = this.constructor +' \'initUI\' method failed to create '
+          msg = this.name +' \'initUI\' method failed to create '
           +'elements on the View.ui property.'
           console.log(new TypeError(msg));
         }
         this.addUIListeners();
       }
     } catch (e) {
-      console.log(this.constructor, e);
+      console.log(this.name, e);
     }
   };
 

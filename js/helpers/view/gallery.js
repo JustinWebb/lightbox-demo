@@ -55,6 +55,7 @@
     // Overriden View class methods
     this.initUI = initUI;
     this.addUIListeners = addUIListeners;
+    this.name = 'Gallery';
 
     // Instance properties
     this.photos = [];

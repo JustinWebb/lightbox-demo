@@ -82,6 +82,7 @@
     // Overriden View class methods
     this.initUI = initUI;
     this.addUIListeners = addUIListeners;
+    this.name = 'SearchForm';
 
     // Initialize View
     JWLB.View.call(this, domId);
