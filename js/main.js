@@ -55,7 +55,11 @@
   };
 
   var displayThumbnail = function (data, id) {
-    _vm.gallery.addThumb(data.sizes, id);
+    if (data) {
+      _vm.gallery.addThumb(data.sizes, id);
+    } else {
+      console.log('Main: displayThumbnail ERROR: ', 'ID: '+id);
+    }
   };
 
   var _vm = {
