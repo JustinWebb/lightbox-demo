@@ -1,4 +1,4 @@
-/* 
+/*
 * @Author: justinwebb
 * @Date:   2015-09-20 14:14:33
 * @Last Modified by:   justinwebb
@@ -9,16 +9,9 @@
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
 var concat = require('gulp-concat');
-var paths = {
-  jsSrc: [
-    '!js/vendor', 
-    'js/helpers.js',
-    'js/main.js'
-  ],
-  jsHelpers: ['js/helpers/**/*.js'],
-  stylesheet: ['css/main.css'],
-  index: 'index.html'
-};
+var sync = require('browser-sync');
+var config = require('./build.config.js');
+console.log('Config: ', config);
 
 //------------------------------------------------------------------
 // Tasks
@@ -28,26 +21,26 @@ var paths = {
  * Concatenate individual source files to 'helpers.js'
  */
 gulp.task('helpers', function () {
-  return gulp.src(paths.jsHelpers)
+  return gulp.src(config.jsHelpers)
     .pipe(concat('helpers.js', {newLine: ';'}))
     .pipe(gulp.dest('js'));
 });
 
 /**
- * Watch files source files and files linked to 'index.html' 
+ * Watch files source files and files linked to 'index.html'
  * for changes
  */
 gulp.task('startup', function (cb) {
-  var watchPaths = paths.jsSrc
-    .concat(paths.index)
-    .concat(paths.stylesheet);
+  var watchPaths = config.jsSrc
+    .concat(config.index)
+    .concat(config.stylesheet);
 
-  livereload.listen();
-
-  gulp.watch(paths.jsHelpers, ['helpers']);
-  gulp.watch(watchPaths, function () {
-    livereload.reload(paths.index);
+  sync.init({
+    server: config.app
   });
+
+  gulp.watch(config.jsHelpers, ['helpers']);
+  gulp.watch(watchPaths).on('change', sync.reload);
 
   cb();
 });
