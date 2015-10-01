@@ -7,11 +7,12 @@
 
 'use strict';
 var gulp = require('gulp');
-var livereload = require('gulp-livereload');
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
 var sync = require('browser-sync');
 var config = require('./build.config.js');
-console.log('Config: ', config);
+console.log('Config: ', config, '\n');
 
 //------------------------------------------------------------------
 // Tasks
@@ -21,9 +22,26 @@ console.log('Config: ', config);
  * Concatenate individual source files to 'helpers.js'
  */
 gulp.task('helpers', function () {
-  return gulp.src(config.jsHelpers)
+  return gulp.src(config.source.jsHelpers)
     .pipe(concat('helpers.js', {newLine: ';'}))
-    .pipe(gulp.dest('js'));
+    .pipe(gulp.dest(config.js));
+});
+
+gulp.task('sass', function () {
+  return gulp.src(config.source.scss)
+    .on('error', sass.logError)
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+        includePaths: [
+          'app/css/scss'
+          // config.importPath.fontawesomeSass
+        ],
+        sourcemap: true
+      })
+    )
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(config.css))
+    .pipe(sync.reload({stream: true}));
 });
 
 /**
@@ -31,19 +49,19 @@ gulp.task('helpers', function () {
  * for changes
  */
 gulp.task('startup', function (cb) {
-  var watchPaths = config.jsSrc
-    .concat(config.index)
-    .concat(config.stylesheet);
+  var watchPaths = config.source.js
+    .concat(config.index);
 
   sync.init({
     server: config.app
   });
 
-  gulp.watch(config.jsHelpers, ['helpers']);
+  gulp.watch(config.source.scss, ['sass']);
+  gulp.watch(config.source.jsHelpers, ['helpers']);
   gulp.watch(watchPaths).on('change', sync.reload);
 
   cb();
 });
 
 
-gulp.task('default', ['helpers', 'startup']);
+gulp.task('default', ['sass', 'helpers', 'startup']);
