@@ -15,7 +15,7 @@
   //--------------------------------------------------------------------
   var inputOnInput = function (event) {
     // User enters data in search box
-    this.ui.button.disabled = (this.ui.input.value === '') ? true : false;
+    this.ui.searchBtn.disabled = (this.ui.input.value === '') ? true : false;
   };
 
   var inputOnKeypress = function (event) {
@@ -29,7 +29,7 @@
         this.sendEvent('search', query);
       } else {
         // TODO: provide user feedback for bad query
-        console.log('SearchForm: input is bad!');
+        console.log(this.name +' input is bad!');
       }
     }
   };
@@ -46,6 +46,10 @@
     }
   };
 
+  var buttonOnClick = function (event) {
+    console.log(this.name, event.target);
+  };
+
   //--------------------------------------------------------------------
   // View overrides
   //--------------------------------------------------------------------
@@ -53,6 +57,7 @@
     this.ui.input.addEventListener('input', inputOnInput.bind(this));
     this.ui.input.addEventListener('keypress', inputOnKeypress.bind(this));
     this.ui.form.addEventListener('submit', formOnSubmit.bind(this));
+    this.ui.closeBtn.addEventListener('click', buttonOnClick.bind(this));
   };
 
   var initUI = function () {
@@ -61,16 +66,20 @@
 
     this.ui.form = comp.querySelector('form');
     this.ui.input = comp.querySelector('form input[type=search]');
-    this.ui.button = comp.querySelector('form button[type=submit]');
+    this.ui.searchBtn = comp.querySelector('button[name=search]');
+    this.ui.closeBtn = comp.querySelector('button[name=close]');
 
-    if (this.ui.form && this.ui.input && this.ui.button) {
+    if (this.ui.form
+      && this.ui.input
+      && this.ui.searchBtn
+      && this.ui.closeBtn) {
       isUIValid = true;
 
       // set state for form elements
       this.ui.input.value = '';
       // this.ui.input.setAttribute('required', true);
       // this.ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
-      this.ui.button.disabled = true;
+      this.ui.searchBtn.disabled = true;
     }
     return isUIValid;
   };

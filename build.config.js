@@ -3,6 +3,9 @@ module.exports = {
   css: 'app/css',
   js: 'app/js',
   index: 'app/index.html',
+  importPath: {
+    fontawesomeSass: 'node_modules/font-awesome/scss'
+  },
   source: {
     js: [
       '!app/js/vendor',

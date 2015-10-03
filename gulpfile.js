@@ -33,8 +33,8 @@ gulp.task('sass', function () {
     .pipe(sourcemaps.init())
     .pipe(sass({
         includePaths: [
-          'app/css/scss'
-          // config.importPath.fontawesomeSass
+          'app/css/scss',
+          config.importPath.fontawesomeSass
         ],
         sourcemap: true
       })

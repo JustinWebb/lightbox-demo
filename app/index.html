@@ -16,19 +16,36 @@
 </head>
 <body>
 <!--[if lt IE 8]>
-<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser.
+Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve
+your experience.</p>
 <![endif]-->
 
 <div class="container">
   <h1>Lightbox Demo</h1>
 
   <section class="search">
+
     <form class="google-style">
-      <input id="query" type="search" placeholder="Type your search tags here"></input>
-      <button type="submit">Search for Images</button>
+      <div class="input-mask">
+        <input id="query"
+          type="search"
+          class="search"
+          placeholder="Type your search tags here">
+        </input>
+        <button type="button" name="close" class="closer">
+          <i class="fa fa-times-circle fa-1x"></i>
+        </button>
+      </div>
+      <button type="submit" name="search" class="submit">
+        <i class="fa fa-search fa-2x"></i>
+      </button>
     </form>
+    <div class="info">
+      <p>Info</p>
+    </div>
   </section>
-  
+
   <section class="gallery">
 
   </section>
