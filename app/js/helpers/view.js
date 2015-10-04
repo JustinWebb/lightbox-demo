@@ -72,6 +72,22 @@
     this.comp().dispatchEvent(se);
   };
 
+  View.prototype.addClass = function (element, className) {
+    if (element.classList) {
+      element.classList.add(className);
+    } else {
+      element.className += ' ' + className;
+    }
+  };
+
+  View.prototype.removeClass = function (element, className) {
+    if (element.classList) {
+      element.classList.remove(className);
+    } else {
+      element.className.replace(className, '').replace(/\s\s/, /\s/);
+    }
+  };
+
   View.prototype.comp = function () {
     return document.querySelector(this.selector);
   };

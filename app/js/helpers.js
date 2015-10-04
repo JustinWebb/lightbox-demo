@@ -103,6 +103,22 @@
     this.comp().dispatchEvent(se);
   };
 
+  View.prototype.addClass = function (element, className) {
+    if (element.classList) {
+      element.classList.add(className);
+    } else {
+      element.className += ' ' + className;
+    }
+  };
+
+  View.prototype.removeClass = function (element, className) {
+    if (element.classList) {
+      element.classList.remove(className);
+    } else {
+      element.className.replace(className, '').replace(/\s\s/, /\s/);
+    }
+  };
+
   View.prototype.comp = function () {
     return document.querySelector(this.selector);
   };
@@ -434,7 +450,13 @@
   //--------------------------------------------------------------------
   var inputOnInput = function (event) {
     // User enters data in search box
-    this.ui.searchBtn.disabled = (this.ui.input.value === '') ? true : false;
+    if (this.ui.input.value === '') {
+      this.ui.searchBtn.disabled = true;
+      this.addClass(this.ui.closeBtn, 'hidden');
+    } else {
+      this.ui.searchBtn.disabled = false;
+      this.removeClass(this.ui.closeBtn, 'hidden');
+    }
   };
 
   var inputOnKeypress = function (event) {
@@ -466,7 +488,7 @@
   };
 
   var buttonOnClick = function (event) {
-    console.log(this.name, event.target);
+    resetSearch(this);
   };
 
   //--------------------------------------------------------------------
@@ -499,8 +521,18 @@
       // this.ui.input.setAttribute('required', true);
       // this.ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
       this.ui.searchBtn.disabled = true;
+      this.addClass(this.ui.closeBtn, 'hidden');
     }
     return isUIValid;
+  };
+
+  //--------------------------------------------------------------------
+  // Helper methods
+  //--------------------------------------------------------------------
+  var resetSearch = function (searchForm) {
+    searchForm.ui.input.value = '';
+    searchForm.addClass(searchForm.ui.closeBtn, 'hidden');
+    searchForm.ui.input.focus();
   };
 
   //--------------------------------------------------------------------

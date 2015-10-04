@@ -1,40 +1,63 @@
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+$canvasWidthSm: 300px;
+$viewportPadding: 10px;
+$closerBtnWidth: 14px;
+$closerBtnMarginRight: 4px;
+$submitBtnWidth: 30px;
+$inputWidth: $canvasWidthSm - ($viewportPadding * 2) -
+  ($closerBtnWidth + $submitBtnWidth) - 8;
+$inputHeight: 32px;
+
+/* Color Palette */
+$offWhite: #fffeff;
+$peanutButter: #eaa721;
+$bronze: #765002;
+$teal: #70c9de;
+$magenta: #e01464;
+$strangeGreen: #3fb893;
+
+
 .container {
   padding: 10px;
 }
 
-$canvasWidthSm: 300px;
-$formPadding: 10px;
-$closerBtnWidth: 14px;
-$submitBtnWidth: 30px;
-$inputWidth: $canvasWidthSm - ($formPadding * 2) - ($closerBtnWidth + $submitBtnWidth);
-$inputHeight: 32px;
-
-
 .search {
   width: 100%;
-  position: relative;
+  margin-bottom: 20px;
 
-  form.google-style {
+  form.search-mode {
     width: 100%;
     max-width: $canvasWidthSm;
     margin: 100px auto 0;
-    padding: $formPadding 0;
-    // text-align: center;
+    padding: 4px 0;
+    background-color: $peanutButter;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
   }
   .input-mask {
     display: inline-block;
+    min-width: $inputWidth + $closerBtnWidth
+      + $closerBtnMarginRight + 5;
     margin-right: 2px;
-    border: 1px solid #222;
-    padding: 0;
+    margin: 0 0 0 4px;
+    border: none;
+    padding: 0 0 0 2px;
+    background-color: $offWhite;
+    border-radius: 6px;
+    -webkit-background-clip: padding-box;
     input {
       // min-width: 280px;
       width: $inputWidth;
       height: $inputHeight;
       border: none;
+      background-color: $offWhite;
     }
+  }
+
+  .results-mode {
+    display: none;
   }
 
   button {
@@ -42,21 +65,24 @@ $inputHeight: 32px;
     border: none;
     margin: 0;
     padding: 0;
+    display: inline-block;
+    vertical-align: middle;
 
     &:focus {
       outline: thin dotted;
     }
 
     &.closer {
-      vertical-align: middle;
-      display: inline-block;
-      margin-right: 4px;
+      margin-right: $closerBtnMarginRight;
+      color: $teal;
     }
 
     &.submit {
-      float: right;
-      margin: 0;
-      padding-top: 4px;
+      margin: 0 0 0 3px;
+      color: $teal;
+      &:disabled {
+        color: $bronze;
+      }
     }
   }
 }
