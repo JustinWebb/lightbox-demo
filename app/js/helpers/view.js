@@ -69,7 +69,7 @@
     } else {
       se = document.createEvent(type, true, true, detail);
     }
-    this.comp().dispatchEvent(se);
+    this.element().dispatchEvent(se);
   };
 
   View.prototype.addClass = function (element, className) {
@@ -88,7 +88,7 @@
     }
   };
 
-  View.prototype.comp = function () {
+  View.prototype.element = function () {
     return document.querySelector(this.selector);
   };
 

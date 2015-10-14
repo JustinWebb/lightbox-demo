@@ -21,16 +21,19 @@ $strangeGreen: #3fb893;
 
 .container {
   padding: 10px;
+  .title {
+    text-align: center;
+  }
 }
 
 .search {
   width: 100%;
   margin-bottom: 20px;
 
-  form.search-mode {
+  form.state-search {
     width: 100%;
     max-width: $canvasWidthSm;
-    margin: 100px auto 0;
+    margin: 0 auto;
     padding: 4px 0;
     background-color: $peanutButter;
     border-radius: 6px;
@@ -46,7 +49,6 @@ $strangeGreen: #3fb893;
     padding: 0 0 0 2px;
     background-color: $offWhite;
     border-radius: 6px;
-    -webkit-background-clip: padding-box;
     input {
       // min-width: 280px;
       width: $inputWidth;
@@ -56,7 +58,7 @@ $strangeGreen: #3fb893;
     }
   }
 
-  .results-mode {
+  .state-results {
     display: none;
   }
 

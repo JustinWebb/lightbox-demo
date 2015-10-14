@@ -100,7 +100,7 @@
     } else {
       se = document.createEvent(type, true, true, detail);
     }
-    this.comp().dispatchEvent(se);
+    this.element().dispatchEvent(se);
   };
 
   View.prototype.addClass = function (element, className) {
@@ -119,7 +119,7 @@
     }
   };
 
-  View.prototype.comp = function () {
+  View.prototype.element = function () {
     return document.querySelector(this.selector);
   };
 
@@ -450,12 +450,13 @@
   //--------------------------------------------------------------------
   var inputOnInput = function (event) {
     // User enters data in search box
-    if (this.ui.input.value === '') {
-      this.ui.searchBtn.disabled = true;
-      this.addClass(this.ui.closeBtn, 'hidden');
+    var ui = this.ui;
+    if (ui.input.value === '') {
+      ui.searchBtn.disabled = true;
+      this.addClass(ui.closeBtn, 'hidden');
     } else {
-      this.ui.searchBtn.disabled = false;
-      this.removeClass(this.ui.closeBtn, 'hidden');
+      ui.searchBtn.disabled = false;
+      this.removeClass(ui.closeBtn, 'hidden');
     }
   };
 
@@ -503,25 +504,24 @@
 
   var initUI = function () {
     var isUIValid = false;
-    var comp = document.querySelector(this.selector);
+    var elem = document.querySelector(this.selector);
+    var ui = this.ui;
 
-    this.ui.form = comp.querySelector('form');
-    this.ui.input = comp.querySelector('form input[type=search]');
-    this.ui.searchBtn = comp.querySelector('button[name=search]');
-    this.ui.closeBtn = comp.querySelector('button[name=close]');
+    ui.form = elem.querySelector('form');
+    ui.input = elem.querySelector('form input[type=search]');
+    ui.searchBtn = elem.querySelector('button[name=search]');
+    ui.closeBtn = elem.querySelector('button[name=close]');
 
-    if (this.ui.form
-      && this.ui.input
-      && this.ui.searchBtn
-      && this.ui.closeBtn) {
+    if (ui.form && ui.input && ui.searchBtn && ui.closeBtn) {
       isUIValid = true;
 
       // set state for form elements
-      this.ui.input.value = '';
-      // this.ui.input.setAttribute('required', true);
-      // this.ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
-      this.ui.searchBtn.disabled = true;
-      this.addClass(this.ui.closeBtn, 'hidden');
+      ui.input.value = '';
+      // TODO: Improve validation
+      // ui.input.setAttribute('required', true);
+      // ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
+      ui.searchBtn.disabled = true;
+      this.addClass(ui.closeBtn, 'hidden');
     }
     return isUIValid;
   };
