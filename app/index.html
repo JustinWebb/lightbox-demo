@@ -26,25 +26,44 @@ your experience.</p>
 
   <section class="search">
 
-    <form class="state-search">
-      <div class="input-mask">
-        <input id="query"
-          type="search"
-          class="text-input"
-          placeholder="Type your search tags here">
-        </input>
-        <button type="button" name="close" class="closer">
-          <i class="fa fa-times fa-1x"></i>
+    <form class="search-form-component">
+
+      <fieldset class="mode search-view">
+        <div class="input-mask">
+          <input id="query"
+            type="search"
+            class="text-input"
+            placeholder="Type your search tags here">
+          </input>
+          <button type="button" name="close" class="closer">
+            <i class="fa fa-times fa-1x"></i>
+          </button>
+        </div>
+        <button type="submit" name="search" class="submit">
+          <i class="fa fa-search fa-2x"></i>
         </button>
-      </div>
-      <button type="submit" name="search" class="submit">
-        <i class="fa fa-search fa-2x"></i>
-      </button>
+      </fieldset>
+
+      <fieldset class="mode results-view">
+        <div class="result">
+          <label for="pages">Page</label>
+          <input type="text" name="pages" value="3/24" readonly></input>
+        </div>
+        <div class="result">
+          <label for="viewing">Viewing</label>
+          <input type="text" name="viewing" value="34" readonly></input>
+        </div>
+        <div class="result">
+          <label for="total">Total</label>
+          <input type="text" name="total" value="105555" readonly></input>
+        </div>
+        <button type="button" name="clear" class="closer">
+          <i class="fa fa-times fa-2x"></i>
+        </button>
+      </fieldset>
+
     </form>
 
-    <div class="state-results">
-      <p>Info</p>
-    </div>
   </section>
 
   <section class="gallery">

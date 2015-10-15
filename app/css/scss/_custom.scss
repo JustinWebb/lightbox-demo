@@ -27,10 +27,11 @@ $strangeGreen: #3fb893;
 }
 
 .search {
+
   width: 100%;
   margin-bottom: 20px;
 
-  form.state-search {
+  form.search-form-component {
     width: 100%;
     max-width: $canvasWidthSm;
     margin: 0 auto;
@@ -38,7 +39,35 @@ $strangeGreen: #3fb893;
     background-color: $peanutButter;
     border-radius: 6px;
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+    .mode {
+      &.search-view {
+
+      }
+      &.results-view {
+        .result {
+          width: 80px;
+          margin: 0;
+          display: inline-block;
+          text-align: center;
+          label {
+            color: $bronze;
+            font-weight: 700;
+            font-size: .95em;
+          }
+          input {
+            max-width: 100%;
+            background: none;
+            border: none;
+            color: $magenta;
+            font-size: 1.2em;
+            font-weight: 500;
+            text-align: center;
+          }
+        }
+      }
+    }
   }
+
   .input-mask {
     display: inline-block;
     min-width: $inputWidth + $closerBtnWidth
@@ -58,10 +87,6 @@ $strangeGreen: #3fb893;
     }
   }
 
-  .state-results {
-    display: none;
-  }
-
   button {
     background: none;
     border: none;
@@ -75,8 +100,18 @@ $strangeGreen: #3fb893;
     }
 
     &.closer {
-      margin-right: $closerBtnMarginRight;
       color: $teal;
+    }
+    &[name=close] {
+      margin-right: $closerBtnMarginRight;
+    }
+    &[name=clear] {
+      width: 40px;
+      height: 44px;
+      margin-top: 4px;
+      display: inline-block;
+      vertical-align: top;
+      text-align: center;
     }
 
     &.submit {
