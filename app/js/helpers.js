@@ -588,9 +588,11 @@
 
   SearchForm.prototype.displayResults = function (results) {
     var sf = this.element();
-    var pageStats = results.page +'/'+ results.pages;
+    var pageStats = (results.pages != 0) ? results.page +'/'+ results.pages : 0;
+    var viewing = (results.total < results.perpage) ?
+      results.total : results.perpage;
     sf.querySelector('input[name=pages]').value = pageStats;
-    sf.querySelector('input[name=viewing]').value = results.perpage;
+    sf.querySelector('input[name=viewing]').value = viewing;
     sf.querySelector('input[name=total]').value = results.total;
 
     toggleFieldsetVisibility(this);
