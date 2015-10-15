@@ -131,5 +131,13 @@
     return this.ui.input.value;
   };
 
+  SearchForm.prototype.displayResults = function (results) {
+    var sf = this.element();
+    var pageStats = results.page +'/'+ results.pages;
+    sf.querySelector('input[name=pages]').value = pageStats;
+    sf.querySelector('input[name=viewing]').value = results.perpage;
+    sf.querySelector('input[name=total]').value = results.total;
+  };
+
   window.JWLB.View.SearchForm = SearchForm;
 })(window);

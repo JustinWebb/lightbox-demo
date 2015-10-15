@@ -39,8 +39,10 @@
   // Utility
   //--------------------------------------------------------------------
   var processSearchResults = function (result) {
+    console.log('_vm.searchResults: ', result.photos);
     _vm.searchResults = result.photos;
-    console.log('_vm.searchResults: ', _vm.searchResults);
+
+    // Collect display details and load resulting thumbnails
     var displaySet = _vm.searchResults.photo.slice(
       _vm.viewIndex,
       _vm.viewCount
@@ -52,6 +54,9 @@
       });
     });
     _vm.viewIndex += _vm.viewCount;
+
+    // Update display details
+    _vm.searchForm.displayResults(_vm.searchResults);
   };
 
   var displayThumbnail = function (data, id) {

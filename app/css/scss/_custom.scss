@@ -101,17 +101,17 @@ $strangeGreen: #3fb893;
 
     &.closer {
       color: $teal;
-    }
-    &[name=close] {
-      margin-right: $closerBtnMarginRight;
-    }
-    &[name=clear] {
-      width: 40px;
-      height: 44px;
-      margin-top: 4px;
-      display: inline-block;
-      vertical-align: top;
-      text-align: center;
+      &[name=close] {
+        margin-right: $closerBtnMarginRight;
+      }
+      &[name=clear] {
+        width: 40px;
+        height: 44px;
+        margin-top: 4px;
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
+      }
     }
 
     &.submit {
