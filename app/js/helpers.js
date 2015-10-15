@@ -488,7 +488,11 @@
     }
   };
 
-  var buttonOnClick = function (event) {
+  var closeButtonOnClick = function (event) {
+    var sf = null;
+    if (!this.isSearchMode) {
+      toggleFieldsetVisibility(this);
+    }
     resetSearch(this);
   };
 
@@ -499,7 +503,8 @@
     this.ui.input.addEventListener('input', inputOnInput.bind(this));
     this.ui.input.addEventListener('keypress', inputOnKeypress.bind(this));
     this.ui.form.addEventListener('submit', formOnSubmit.bind(this));
-    this.ui.closeBtn.addEventListener('click', buttonOnClick.bind(this));
+    this.ui.closeBtn.addEventListener('click', closeButtonOnClick.bind(this));
+    this.ui.clearBtn.addEventListener('click', closeButtonOnClick.bind(this));
   };
 
   var initUI = function () {
@@ -511,9 +516,11 @@
     ui.input = elem.querySelector('form input[type=search]');
     ui.searchBtn = elem.querySelector('button[name=search]');
     ui.closeBtn = elem.querySelector('button[name=close]');
+    ui.clearBtn = elem.querySelector('button[name=clear]');
 
     if (ui.form && ui.input && ui.searchBtn && ui.closeBtn) {
       isUIValid = true;
+      var results = this.element().querySelector('fieldset[name=results]');
 
       // set state for form elements
       ui.input.value = '';
@@ -522,6 +529,8 @@
       // ui.input.setAttribute('pattern', /^[a-z\d\-_\s]+$/i);
       ui.searchBtn.disabled = true;
       this.addClass(ui.closeBtn, 'hidden');
+      this.addClass(results, 'hidden');
+      this.isSearchMode = true;
     }
     return isUIValid;
   };
@@ -535,6 +544,16 @@
     searchForm.ui.input.focus();
   };
 
+  var toggleFieldsetVisibility = function (searchForm) {
+    var sf = searchForm;
+    var vizName = (sf.isSearchMode) ? 'query' : 'results';
+    var invizName = (vizName === 'query') ? 'results' : 'query';
+    var el = sf.element();
+    sf.addClass(el.querySelector('fieldset[name='+ vizName +']'), 'hidden');
+    sf.removeClass(el.querySelector('fieldset[name='+ invizName +']'), 'hidden');
+    sf.isSearchMode = !sf.isSearchMode;
+  };
+
   //--------------------------------------------------------------------
   // Constructor
   //--------------------------------------------------------------------
@@ -543,6 +562,7 @@
     this.initUI = initUI;
     this.addUIListeners = addUIListeners;
     this.name = 'SearchForm';
+    this.isSearchMode = null;
 
     // Initialize View
     JWLB.View.call(this, domId);
@@ -572,6 +592,9 @@
     sf.querySelector('input[name=pages]').value = pageStats;
     sf.querySelector('input[name=viewing]').value = results.perpage;
     sf.querySelector('input[name=total]').value = results.total;
+
+    toggleFieldsetVisibility(this);
+
   };
 
   window.JWLB.View.SearchForm = SearchForm;
