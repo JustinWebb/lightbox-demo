@@ -148,6 +148,7 @@ $strangeGreen: #3fb893;
 
       img {
         max-width: 100%;
+        box-shadow: 0 1px 1px rgba(2, 2, 2, 0.5);
       }
     }
   }
@@ -163,6 +164,8 @@ $strangeGreen: #3fb893;
 
   .canvas {
     width: 300px;
+    padding: 20px;
+    background-color: white;
 
   /* center on screen at any width; requires fixed dimensions
   so height added to element dynamically based on image */
@@ -172,6 +175,7 @@ $strangeGreen: #3fb893;
 
     img {
       max-width: 100%;
+      box-shadow: 0 1px 3px rgba(2, 2, 2, 0.5);
     }
   }
 }
