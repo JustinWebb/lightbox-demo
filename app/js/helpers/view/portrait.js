@@ -28,12 +28,13 @@
     var comp = document.createElement('section');
     comp.setAttribute('class', 'portrait');
     var canvas = document.createElement('div');
+    canvas.setAttribute('data', 'canvas');
     canvas.setAttribute('class', 'canvas');
     comp.appendChild(canvas);
     this.ui.portrait = comp;
 
     if (this.ui.portrait) {
-      _vm.canvasSelector = 'section.portrait > .canvas';
+      _vm.canvasSelector = 'section.portrait > div[data=canvas]';
       isUIValid = true;
     }
 
@@ -48,6 +49,13 @@
     canvas.style.marginLeft = (canvas.offsetWidth / 2 * -1) +'px';
     canvas.style.marginTop = (canvas.offsetHeight / 2 * -1) +'px';
     console.log(canvas);
+  };
+
+  var cleanUpImage = function () {
+    var canvas = document.querySelector(_vm.canvasSelector);
+    var img = canvas.querySelector('img');
+    img.onload = null;
+    img.remove();
   };
   //--------------------------------------------------------------------
   // Constructor
@@ -69,19 +77,23 @@
 
   Portrait.prototype.show = function (pic) {
 
-    // Create UI and add pic to DOM
+    // Create UI and prepare pic for display
     var img = document.createElement('img');
     img.setAttribute('src', pic.source);
     img.setAttribute('title', pic.title);
     img.onload = imgCenterCanvasOnScreen;
-    this.ui.portrait.querySelector('.canvas').appendChild(img);
+
+    // Remove any previous images and display
+    var canvas = this.ui.portrait.querySelector('div[data=canvas]');
+    if (canvas.children.length > 0) {
+      cleanUpImage();
+    }
+    canvas.appendChild(img);
     document.querySelector(this.selector).appendChild(this.ui.portrait);
   };
 
   Portrait.prototype.hide = function () {
-    var img = this.ui.portrait.querySelector('img');
-    img.onload = null;
-    img.remove();
+    cleanUpImage();
     document.querySelector(this.selector).removeChild(this.ui.portrait);
   };
 
