@@ -129,18 +129,26 @@ $strangeGreen: #3fb893;
   width: 100%;
   min-height: 20px;
   background-color: #f1f1f1;
+  article {
+    width: 100%;
+    min-height: 20px;
 
-  .thumb {
-    float: left;
-    max-width: 69px;
-    max-height: 69px;
-    padding: 1px;
-    margin: 1px;
-    border: 1px solid #222;
-    cursor: pointer;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
 
-    img {
-      max-width: 100%;
+    .thumb {
+      // float: left;
+      flex-grow: 1;
+      padding: 1px;
+      margin: 1px 1px 3px 1px;
+      // border: 1px solid #222;
+      cursor: pointer;
+
+      img {
+        max-width: 100%;
+      }
     }
   }
 }
