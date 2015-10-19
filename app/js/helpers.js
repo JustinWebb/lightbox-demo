@@ -280,6 +280,7 @@
     this.ui.wall = comp;
 
     if (this.ui.wall) {
+      this.reset();
       isUIValid = true;
     }
 
@@ -337,7 +338,16 @@
     img.setAttribute('src', photo.thumb.source);
     img.setAttribute('title', 'id: '+ id);
     node.appendChild(img);
-    this.ui.wall.appendChild(node);
+    this.ui.wall.querySelector('article[name=foobar]').appendChild(node);
+  };
+
+  Gallery.prototype.reset = function () {
+    if (this.ui.wall.children.length > 0) {
+      this.ui.wall.children.item(0).remove();
+    }
+    var article = document.createElement('article');
+    article.setAttribute('name', 'foobar');
+    this.ui.wall.appendChild(article);
   };
 
 

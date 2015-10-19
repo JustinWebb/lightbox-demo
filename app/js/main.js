@@ -40,7 +40,14 @@
   //--------------------------------------------------------------------
   var processSearchResults = function (result) {
     console.log('_vm.searchResults: ', result.photos);
+
+    // Reset search results and update display details
+    if (_vm.searchResults) {
+      _vm.gallery.reset();
+      _vm.viewIndex = 0;
+    }
     _vm.searchResults = result.photos;
+    _vm.searchForm.displayResults(_vm.searchResults);
 
     // Collect display details and load resulting thumbnails
     var displaySet = _vm.searchResults.photo.slice(
@@ -53,10 +60,9 @@
         onSuccess: displayThumbnail
       });
     });
-    _vm.viewIndex += _vm.viewCount;
 
-    // Update display details
-    _vm.searchForm.displayResults(_vm.searchResults);
+    // Update pagination
+    _vm.viewIndex += _vm.viewCount;
   };
 
   var displayThumbnail = function (data, id) {

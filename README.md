@@ -12,7 +12,6 @@ Your default browser should open to http://localhost:3000.
 Enjoy!
 
 ## Roadmap
-- show results of 2nd+ searches in Gallery component
 - make Gallery component responsive, scaling up from mobile
 - add Stack color palette and Material Design styles to Gallery component
 - add state transition animations for thumbnail class and for SearchForm, Gallery, and Portrait components
