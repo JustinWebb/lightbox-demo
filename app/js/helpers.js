@@ -415,7 +415,7 @@
     var canvas = document.querySelector(_vm.canvasSelector);
     var img = canvas.querySelector('img');
     img.onload = null;
-    img.remove();
+    img.parentNode.removeChild(img);
   };
   //--------------------------------------------------------------------
   // Constructor
