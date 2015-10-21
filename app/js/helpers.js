@@ -99,7 +99,7 @@
           detail: detail
         });
       } catch (e) {
-        se = document.createEvent('Event');
+        se = document.createEvent('CustomEvent');
         se.initCustomEvent(type, true, true, detail);
       }
     } else {
