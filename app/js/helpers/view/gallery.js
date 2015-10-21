@@ -105,7 +105,8 @@
 
   Gallery.prototype.reset = function () {
     if (this.ui.wall.children.length > 0) {
-      this.ui.wall.children.item(0).remove();
+      var article = this.ui.wall.children.item(0)
+      article.parentNode.remove(article);
     }
     var article = document.createElement('article');
     article.setAttribute('name', 'foobar');
