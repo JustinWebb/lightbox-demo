@@ -1,0 +1,66 @@
+/* -------------------------------------------------------------------
+ Bootstrap 3 breakpoints, cloned for use in '@mixin bs-breakpoint'
+------------------------------------------------------------------- */
+
+// Extra small screen / phone
+$ui-xs-min:                480px !default;
+$ui-xs-max:                767px !default;
+
+// Small screen / tablet
+$ui-sm-min:                768px !default;
+$ui-sm-max:                991px !default;
+
+// Medium screen / desktop
+$ui-md-min:                992px !default;
+$ui-md-max:               1999px !default;
+
+// Large screen / wide desktop
+$ui-lg-min:               1200px !default;
+
+
+
+
+@mixin bs-breakpoint($point) {
+
+  // Really small, old screens not recognized by Boostrap / phone (X < 480px);
+  @if $point == xxs {
+    @media (max-width: $ui-xs-min - 1) {
+      @content;
+    }
+  }
+
+  // Extra small screen / phone (480px - 767px);
+  @if $point == xs {
+    @media (min-width: $ui-xs-min) and (max-width: $ui-xs-max) {
+      @content;
+    }
+  }
+
+  // Small screen / tablet (768px - 991px)
+  @if $point == sm {
+    @media (min-width: $ui-sm-min) and (max-width: $ui-sm-max) {
+      @content;
+    }
+  }
+  // Small screen minimum
+  @if $point == sm-min {
+    @media (min-width: $ui-sm-min) {
+      @content;
+    }
+  }
+
+  // Medium screen / desktop (992px - 1999px)
+  @if $point == md {
+    @media (min-width: $ui-md-min) and (max-width: $ui-md-max) {
+      @content;
+    }
+  }
+
+  // Large screen / wide desktop (1200px < X);
+  @if $point == lg {
+    @media (min-width: $ui-lg-min) {
+      @content;
+    }
+  }
+
+}
