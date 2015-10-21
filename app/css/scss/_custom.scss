@@ -195,7 +195,12 @@ $strangeGreen: #3fb893;
     }
 
     @include bs-breakpoint(md) {
-      max-width: 1000px;
+      max-width: 900px;
+      padding: 20px;
+    }
+
+    @include bs-breakpoint(lg) {
+      max-width: 1200px;
       padding: 20px;
     }
 
