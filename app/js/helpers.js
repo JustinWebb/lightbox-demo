@@ -92,11 +92,16 @@
 
     // Dispatch custom event from component element
     if (window.CustomEvent) {
-      se = new window.CustomEvent(type, {
-        bubbles: true,
-        cancelable: true,
-        detail: detail
-      });
+      try {
+        se = new window.CustomEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          detail: detail
+        });
+      } catch (e) {
+        se = document.createEvent('Event');
+        se.initEvent(type, true, true, detail);
+      }
     } else {
       se = document.createEvent(type, true, true, detail);
     }
