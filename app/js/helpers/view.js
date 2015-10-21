@@ -69,7 +69,7 @@
         });
       } catch (e) {
         se = document.createEvent('Event');
-        se.initEvent(type, true, true, detail);
+        se.initCustomEvent(type, true, true, detail);
       }
     } else {
       se = document.createEvent(type, true, true, detail);
