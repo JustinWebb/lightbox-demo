@@ -6,7 +6,6 @@ node_modules
 
 # Generated files
 *.map
-*.css
 
 # User specifics
 .DS_Store
