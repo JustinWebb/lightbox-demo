@@ -61,7 +61,7 @@
 
     // Dispatch custom event from component element
     if (window.CustomEvent) {
-      se = new CustomEvent(type, {
+      se = new window.CustomEvent(type, {
         bubbles: true,
         cancelable: true,
         detail: detail
