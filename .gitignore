@@ -4,9 +4,6 @@
 node_modules
 .env
 
-# Generated files
-*.map
-
 # User specifics
 .DS_Store
 .sublime-project
