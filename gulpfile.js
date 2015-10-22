@@ -23,7 +23,9 @@ console.log('Config: ', config, '\n');
  */
 gulp.task('helpers', function () {
   return gulp.src(config.source.jsHelpers)
+    .pipe(sourcemaps.init())
     .pipe(concat('helpers.js', {newLine: ';'}))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest(config.js));
 });
 

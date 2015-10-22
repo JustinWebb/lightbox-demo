@@ -96,4 +96,5 @@
   _vm.gallery = new JWLB.View.Gallery('.gallery');
   _vm.portraitFrame = new JWLB.View.Portrait();
 
+  console.log('Lightbox Demo (JWLB)', window.JWLB);
 })(window.JWLB);

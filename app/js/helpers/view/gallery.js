@@ -113,6 +113,5 @@
     this.ui.wall.appendChild(article);
   };
 
-
   window.JWLB.View.Gallery = Gallery;
 })(window);
