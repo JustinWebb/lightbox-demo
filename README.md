@@ -2,7 +2,9 @@
 Skills demo for take-home interview exam.  Built using [HTML5 Boilerplate](https://html5boilerplate.com/) minus jQuery.
 
 ## Directions
-To run locally:
+You can see the [lightbox-demo here](http://justinwebb.github.io/lightbox-demo).
+
+To run the demo locally:
 
 - `git clone https://github.com/JustinWebb/lightbox-demo.git`
 - `cd lightbox-demo`
